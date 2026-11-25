@@ -74,7 +74,10 @@ class _Conn:
                 self.conn.execute(sql, params)
             self.conn.execute("COMMIT")
         except Exception:
-            self.conn.execute("ROLLBACK")
+            try:
+                self.conn.execute("ROLLBACK")
+            except duckdb.Error:
+                pass  # a failed COMMIT has already ended the transaction; the error worth reporting is the first one
             raise
 
     def write_batch(self, trace, version, batch, attempt, rows, errors):

@@ -52,6 +52,14 @@ class _FailsOnce(_Wrapped):
         self.inner.write_batch(trace, version, batch, attempt, rows, errors)
 
 
+class _OneNumberPerDelivery(_Wrapped):
+    def write_batch(self, trace, version, batch, attempt, rows, errors):
+        if batch == 3 and attempt == 0:
+            raise OSError("first delivery fails")
+        open(f"{self.inner.root}/seen-{trace}-{version}-{batch}-{attempt}", "x").close()  # raises if the number was used
+        self.inner.write_batch(trace, version, batch, attempt, rows, errors)
+
+
 class _AlwaysFails(_Wrapped):
     def write_batch(self, trace, version, batch, attempt, rows, errors):
         if batch == 3:
@@ -113,6 +121,13 @@ def test_a_failed_write_is_delivered_again_and_the_run_still_verifies(tmp_path):
     r = run(files(tmp_path, _FailsOnce), **SMALL)
     assert r["write_errors"] >= 2 and r["batches_failed"] == 0 and r["verified"]
     assert "OSError" in r["error_types"]
+
+
+def test_a_retry_and_a_duplicate_delivery_of_one_batch_never_share_an_attempt_number(tmp_path):
+    # An appending store keeps one delivery per batch by its attempt number, so two deliveries with one number are
+    # both kept. This happened: a failed first delivery was retried as attempt 1, the number of the duplicate delivery.
+    r = run(files(tmp_path, _OneNumberPerDelivery), redeliver_every=1, **SMALL)
+    assert "FileExistsError" not in r["error_types"] and r["verified"]
 
 
 def test_a_batch_that_fails_three_deliveries_is_reported_as_failed(tmp_path):

@@ -135,7 +135,7 @@ def _load(option, plan, *, rows, workers, rate, redeliver_every, probe_every, pr
         jobs.put((trace, version, batch, 0, offset))
         outstanding[trace, version] += 1
         if redeliver_every and i % redeliver_every == redeliver_every - 1:
-            jobs.put((trace, version, batch, 1, offset))
+            jobs.put((trace, version, batch, DELIVERIES, offset))  # numbered apart from the retries of the first
             outstanding[trace, version] += 1
             redelivered += 1
 
@@ -152,7 +152,7 @@ def _load(option, plan, *, rows, workers, rate, redeliver_every, probe_every, pr
             acked.setdefault((trace, version), set()).add(batch)
         else:
             errors[rest[0]] += 1
-            if attempt + 1 < DELIVERIES:
+            if attempt % DELIVERIES + 1 < DELIVERIES:
                 jobs.put((trace, version, batch, attempt + 1, 0.0))
                 outstanding[trace, version] += 1
         outstanding[trace, version] -= 1
