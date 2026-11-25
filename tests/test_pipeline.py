@@ -73,6 +73,11 @@ class _Slow(_Wrapped):
         return self.inner.read_batch(trace, version, batch) if written and time.time() - written.timestamp() > 0.3 else 0
 
 
+class _CannotClose(_Wrapped):
+    def finalize(self, trace, version):
+        raise OSError("credentials timed out")
+
+
 @dataclass
 class Variant(Files):
     conn: type = _Wrapped
@@ -134,6 +139,12 @@ def test_a_batch_that_fails_three_deliveries_is_reported_as_failed(tmp_path):
     r = run(files(tmp_path, _AlwaysFails), **SMALL)
     assert r["batches_failed"] == 2 and r["batches_committed"] == 10
     assert not r["verified"], "a run that lost batches is not a clean run"
+
+
+def test_a_trace_that_cannot_be_closed_stops_the_run_with_that_error(tmp_path):
+    # This happened: the run carried on to the reads, which failed with an error about a missing version instead.
+    with pytest.raises(RuntimeError, match="closing a trace failed.*credentials timed out"):
+        run(files(tmp_path, _CannotClose), **SMALL)
 
 
 def test_an_open_loop_run_keeps_to_its_rate_and_reports_how_far_behind_it_fell(tmp_path):

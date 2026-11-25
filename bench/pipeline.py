@@ -175,6 +175,9 @@ def _load(option, plan, *, rows, workers, rate, redeliver_every, probe_every, pr
     visible, reads, skipped, timeouts = probed.get()
     for p in procs + [prober]:
         p.join()
+    unclosed = [e for e in errors if e.startswith("finalize: ")]
+    if unclosed:  # the reads that follow would fail on the missing trace and hide this error
+        raise RuntimeError(f"{option.name}: closing a trace failed: {unclosed[0].removeprefix('finalize: ')}")
     return {
         "seconds": ended - began, "commits": commits, "behind": behind, "finalize": finalize, "errors": errors,
         "acked": acked, "failed": failed, "redelivered": redelivered, "finalize_retries": finalize_retries,

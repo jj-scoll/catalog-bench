@@ -170,8 +170,8 @@ From the third set of runs (†). The rate figures include contention between th
 
 - Every figure here is from one run.
 - The six † rate runs ran at the same time on one instance, so they competed for its CPU and network, and the rows without a † did not. A small gap between a † row and another row is not a difference between options.
-- `delta-per-batch` has no ceiling result. With the pacing removed, delta-rs timed out fetching instance credentials from the instance metadata service, and closing a trace failed. The option opens the table on every call and each open loads credentials. It is not a commit conflict. Two attempts ended the same way; the cause was read from the second, which had extra logging. It is not fixed yet.
-- When a close fails, the harness carries on to the read step and reports an error from there. For the run above it reported a DuckDB `BinderException`, which is misleading: the cause was the failed close.
+- `delta-per-batch` has no ceiling result. With the pacing removed, delta-rs timed out fetching instance credentials from the instance metadata service, and closing a trace failed. The option opens the table on every call and each open loads credentials. It was not a commit conflict. Two attempts ended the same way; the cause was read from the second, which had extra logging. The option now keeps one open table per process, but that change has not been run on S3, so the result is still missing.
+- In the run above the harness carried on to the read step after the failed close and reported a DuckDB `BinderException` from there. It now stops with the close error instead.
 - How Delta Lake and Lance arbitrate concurrent commits on S3 in this setup was not examined. No lock table was used. The runs verified, which says no row was lost, duplicated or left stale in these runs and nothing more general.
 - The Delta Lake, Lance and Vortex options were run only at the rate and ceiling shapes, and only with no catalog service.
 - `vortex` and `files` use different readers (DuckDB and pyarrow), so the difference in their read times is not the file format alone.
