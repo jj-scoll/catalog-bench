@@ -1,0 +1,72 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T07:48:21+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "ducklake": "DuckDB 2.0.1, ducklake extension 08089b16dc, format 1.1, PostgreSQL 16.8"
+ },
+ "descriptions": {
+  "ducklake": "DuckLake with default settings, metadata in Postgres. Each batch is one transaction that inserts its output and\nerror rows. Closing a trace is one transaction that deletes the trace's older versions and records the new one;\nDuckLake aborts a delete that races an insert into the same table, so the finaliser retries. Readers take the\nrecorded version and one delivery per batch. Maintenance merges adjacent data files."
+ },
+ "results": [
+  {
+   "option": "ducklake",
+   "traces": 4,
+   "batches_per_trace": 500,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": null,
+   "redelivered": 40,
+   "load_seconds": 86.4810460509998,
+   "batches_committed": 2000,
+   "batches_failed": 0,
+   "batches_per_s": 23.588983865863124,
+   "write_errors": 15,
+   "finalize_errors": 0,
+   "error_types": {
+    "TransactionException": {
+     "count": 15,
+     "example": "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit"
+    }
+   },
+   "commit_p50_ms": 318.33430500046234,
+   "commit_p95_ms": 2011.1299249992953,
+   "commit_p99_ms": 4438.7250819991095,
+   "commit_max_ms": 9930.511739999929,
+   "behind_p95_ms": null,
+   "behind_max_ms": null,
+   "fresh_samples": 398,
+   "fresh_skipped": 2,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 5.92085300013423,
+   "visible_after_p95_ms": 22.862539000016113,
+   "visible_after_max_ms": 41.689704000418715,
+   "fresh_read_p50_ms": 54.013016999306274,
+   "fresh_read_p95_ms": 67.07285399988905,
+   "finalize_retries": 2,
+   "finalize_p50_ms": 17.751405999661074,
+   "finalize_max_ms": 484.38496500057227,
+   "read_trace_p50_ms": 294.8631839999507,
+   "read_trace_max_ms": 400.4410260004079,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 13.282573398999375,
+   "reprocess_finalize_ms": 882.3039629996856,
+   "reprocess_read_ms": 225.4934479997246,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": 2.3950188690005234,
+   "read_trace_after_maintain_p50_ms": 128.0286539995359,
+   "verified_after_maintain": true
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T06:37:00+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "ducklake": "DuckDB 2.0.1, ducklake extension 08089b16dc, format 1.1, PostgreSQL 16.8"
+ },
+ "descriptions": {
+  "ducklake": "DuckLake with default settings, metadata in Postgres. Each batch is one transaction that inserts its output and\nerror rows. Closing a trace is one transaction that deletes the trace's older versions and records the new one;\nDuckLake aborts a delete that races an insert into the same table, so the finaliser retries. Readers take the\nrecorded version and one delivery per batch. Maintenance merges adjacent data files."
+ },
+ "results": [
+  {
+   "option": "ducklake",
+   "traces": 6,
+   "batches_per_trace": 300,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": 1.25,
+   "redelivered": 36,
+   "load_seconds": 1439.5048439690001,
+   "batches_committed": 1800,
+   "batches_failed": 0,
+   "batches_per_s": 1.275438570208478,
+   "write_errors": 0,
+   "finalize_errors": 0,
+   "error_types": {},
+   "commit_p50_ms": 96.30487399999765,
+   "commit_p95_ms": 117.0408130000169,
+   "commit_p99_ms": 232.8071249999084,
+   "commit_max_ms": 347.77378500007217,
+   "behind_p95_ms": 0.07512000001952401,
+   "behind_max_ms": 0.08264900000654052,
+   "fresh_samples": 360,
+   "fresh_skipped": 0,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 5.254977999982202,
+   "visible_after_p95_ms": 6.220901999995476,
+   "visible_after_max_ms": 6.390718000034212,
+   "fresh_read_p50_ms": 51.96858499999735,
+   "fresh_read_p95_ms": 64.08108300001913,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 47.41957999999613,
+   "finalize_max_ms": 87.30848099997957,
+   "read_trace_p50_ms": 339.8011649999262,
+   "read_trace_max_ms": 501.01959900007387,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 120.21621507700002,
+   "reprocess_finalize_ms": 806.0667739998735,
+   "reprocess_read_ms": 288.9747179999631,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": 3.3144998820000637,
+   "read_trace_after_maintain_p50_ms": 97.97769199985851,
+   "verified_after_maintain": true
+  }
+ ]
+}

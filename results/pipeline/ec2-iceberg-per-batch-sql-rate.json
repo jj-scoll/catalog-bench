@@ -1,0 +1,72 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T07:12:42+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "iceberg-per-batch": "pyiceberg 0.12.0, pyarrow 26.0.1; pyiceberg 0.12.0, pyarrow 26.0.1, SQL catalog on PostgreSQL"
+ },
+ "descriptions": {
+  "iceberg-per-batch": "Iceberg through pyiceberg, one commit per batch. Each batch appends its output rows and then its error rows, as\ntwo commits, to tables partitioned by trace. Closing a trace deletes the trace's older versions and appends its new\nversion to a control table, as three more commits. Readers take the recorded version and one delivery per batch.\nNo maintenance is run."
+ },
+ "results": [
+  {
+   "option": "iceberg-per-batch",
+   "traces": 6,
+   "batches_per_trace": 300,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": 1.25,
+   "redelivered": 36,
+   "load_seconds": 1723.6368762180005,
+   "batches_committed": 1800,
+   "batches_failed": 0,
+   "batches_per_s": 1.0651895566475384,
+   "write_errors": 1,
+   "finalize_errors": 0,
+   "error_types": {
+    "CommitFailedException": {
+     "count": 1,
+     "example": "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>"
+    }
+   },
+   "commit_p50_ms": 1797.8904599999623,
+   "commit_p95_ms": 32122.775046999777,
+   "commit_p99_ms": 46408.73745099998,
+   "commit_max_ms": 78416.73666099996,
+   "behind_p95_ms": 193891.7976810003,
+   "behind_max_ms": 1702218.295061,
+   "fresh_samples": 360,
+   "fresh_skipped": 0,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 4.900807000012719,
+   "visible_after_p95_ms": 8.103896000193345,
+   "visible_after_max_ms": 15.21363800020481,
+   "fresh_read_p50_ms": 209.3269980000514,
+   "fresh_read_p95_ms": 484.0744740004084,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 1340.499679000004,
+   "finalize_max_ms": 2354.500426999948,
+   "read_trace_p50_ms": 720.5222440006764,
+   "read_trace_max_ms": 802.8332420008155,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 252.59407637299955,
+   "reprocess_finalize_ms": 3302.1640770002705,
+   "reprocess_read_ms": 399.64746799978457,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": null,
+   "read_trace_after_maintain_p50_ms": null,
+   "verified_after_maintain": null
+  }
+ ]
+}

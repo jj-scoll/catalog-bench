@@ -1,0 +1,986 @@
+{
+ "environment": "EC2 c6id.4xlarge, ca-central-1, local NVMe, Postgres 18 in Docker",
+ "ran_at": "2026-11-25T06:31:49+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "polaris": "Polaris 1.9.0, RustFS 1.0.6, pyiceberg 0.12.0, pyarrow 26.0.1"
+ },
+ "descriptions": {
+  "polaris": "Apache Polaris (Iceberg REST catalog, metadata in Postgres) via pyiceberg, data in a local RustFS object store.\nOne single-row append per commit, with pyiceberg's default retry-with-backoff. Server and client defaults."
+ },
+ "harness_ceiling": [
+  {
+   "writers": 1,
+   "commits_per_s": 5558120.337216818
+  }
+ ],
+ "results": [
+  {
+   "system": "polaris",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.089415879,
+   "commits": 379,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 6.307267169366055,
+   "per_writer_commits": [
+    379
+   ],
+   "p50_ms": 157.2347180000122,
+   "p95_ms": 251.06823999999506,
+   "p99_ms": 268.61223900002074,
+   "max_ms": 274.1859080000211,
+   "catalog_p50_ms": 26.415931999991926,
+   "mean_ms": 158.54652352506673,
+   "rows_found": 379,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.19427111600001,
+   "commits": 389,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 6.462409009826874,
+   "per_writer_commits": [
+    389
+   ],
+   "p50_ms": 148.63755899997955,
+   "p95_ms": 253.22427000003245,
+   "p99_ms": 309.1057009999645,
+   "max_ms": 317.04191700004003,
+   "catalog_p50_ms": 20.234880999993266,
+   "mean_ms": 154.7403086606688,
+   "rows_found": 389,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.05882911599997,
+   "commits": 392,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 6.526933770934426,
+   "per_writer_commits": [
+    392
+   ],
+   "p50_ms": 147.73876200001723,
+   "p95_ms": 278.4675329999686,
+   "p99_ms": 307.79094600001144,
+   "max_ms": 314.84368399998175,
+   "catalog_p50_ms": 18.792948999987402,
+   "mean_ms": 153.2105495306125,
+   "rows_found": 392,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.773655512000005,
+   "commits": 391,
+   "errors": 10,
+   "error_samples": {
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 10,
+     "example": "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>"
+    }
+   },
+   "commits_per_s": 6.433708762554121,
+   "per_writer_commits": [
+    180,
+    211
+   ],
+   "p50_ms": 160.95832899998186,
+   "p95_ms": 920.8163939999849,
+   "p99_ms": 1523.132199000031,
+   "max_ms": 2171.407426999963,
+   "catalog_p50_ms": 18.35596699999087,
+   "mean_ms": 249.99343407928333,
+   "rows_found": 391,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.755361205999975,
+   "commits": 393,
+   "errors": 7,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 2,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 7,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.468564949642482,
+   "per_writer_commits": [
+    187,
+    206
+   ],
+   "p50_ms": 166.94292800002586,
+   "p95_ms": 912.820508999971,
+   "p99_ms": 1585.966580000047,
+   "max_ms": 2522.5928220000355,
+   "catalog_p50_ms": 18.90727599999309,
+   "mean_ms": 268.91402186259677,
+   "rows_found": 393,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.89415127500001,
+   "commits": 393,
+   "errors": 11,
+   "error_samples": {
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 11,
+     "example": "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>"
+    }
+   },
+   "commits_per_s": 6.453821783724334,
+   "per_writer_commits": [
+    125,
+    268
+   ],
+   "p50_ms": 168.2929090000016,
+   "p95_ms": 876.7619490000698,
+   "p99_ms": 2419.0282040000284,
+   "max_ms": 2625.5938570000126,
+   "catalog_p50_ms": 19.629601000019647,
+   "mean_ms": 246.41634416030794,
+   "rows_found": 393,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.024431833999984,
+   "commits": 395,
+   "errors": 31,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 2,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 31,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.472817331171354,
+   "per_writer_commits": [
+    70,
+    89,
+    104,
+    132
+   ],
+   "p50_ms": 186.69192000004387,
+   "p95_ms": 1616.7546140000013,
+   "p99_ms": 2317.954132999944,
+   "max_ms": 2403.847138999936,
+   "catalog_p50_ms": 17.832507000093756,
+   "mean_ms": 433.8922552455668,
+   "rows_found": 395,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.545257848000006,
+   "commits": 394,
+   "errors": 35,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 3,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 35,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.401792985790595,
+   "per_writer_commits": [
+    77,
+    95,
+    110,
+    112
+   ],
+   "p50_ms": 204.3896830000449,
+   "p95_ms": 1507.640656000035,
+   "p99_ms": 2587.4098530000538,
+   "max_ms": 2618.335502999912,
+   "catalog_p50_ms": 17.10414599995147,
+   "mean_ms": 412.7725132969584,
+   "rows_found": 394,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.027291429,
+   "commits": 395,
+   "errors": 33,
+   "error_samples": {
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 33,
+     "example": "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>"
+    }
+   },
+   "commits_per_s": 6.47251403021136,
+   "per_writer_commits": [
+    79,
+    101,
+    103,
+    112
+   ],
+   "p50_ms": 208.31039999995937,
+   "p95_ms": 1468.1688069999836,
+   "p99_ms": 2492.4158510000325,
+   "max_ms": 2704.887386999985,
+   "catalog_p50_ms": 18.092736999960835,
+   "mean_ms": 421.6453740379732,
+   "rows_found": 395,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 61.91079711000009,
+   "commits": 409,
+   "errors": 89,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 4,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 89,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.606279019042652,
+   "per_writer_commits": [
+    40,
+    41,
+    43,
+    47,
+    49,
+    52,
+    62,
+    75
+   ],
+   "p50_ms": 451.76976499999455,
+   "p95_ms": 2181.914728000038,
+   "p99_ms": 2778.966870999966,
+   "max_ms": 2901.5319439999985,
+   "catalog_p50_ms": 17.537655000069208,
+   "mean_ms": 679.922582278727,
+   "rows_found": 409,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.491418053000075,
+   "commits": 400,
+   "errors": 96,
+   "error_samples": {
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 2,
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 2
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 96,
+     "example": "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>"
+    }
+   },
+   "commits_per_s": 6.40087891205722,
+   "per_writer_commits": [
+    31,
+    36,
+    46,
+    47,
+    51,
+    60,
+    61,
+    68
+   ],
+   "p50_ms": 374.81335799998305,
+   "p95_ms": 2236.597438999979,
+   "p99_ms": 2679.462582000042,
+   "max_ms": 2782.092611000053,
+   "catalog_p50_ms": 19.89000700007182,
+   "mean_ms": 655.7168096974999,
+   "rows_found": 400,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.61094805500011,
+   "commits": 392,
+   "errors": 90,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 8,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 2
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 90,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.260885870241904,
+   "per_writer_commits": [
+    39,
+    40,
+    43,
+    48,
+    52,
+    52,
+    56,
+    62
+   ],
+   "p50_ms": 436.55902900002275,
+   "p95_ms": 2334.4669629999544,
+   "p99_ms": 2680.103377000023,
+   "max_ms": 2780.6960030000027,
+   "catalog_p50_ms": 20.15124399997603,
+   "mean_ms": 704.4620593903041,
+   "rows_found": 392,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.54078673499998,
+   "commits": 391,
+   "errors": 250,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 17,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 3
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 250,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.251920073483548,
+   "per_writer_commits": [
+    11,
+    15,
+    16,
+    17,
+    18,
+    21,
+    22,
+    26,
+    27,
+    27,
+    28,
+    29,
+    31,
+    32,
+    35,
+    36
+   ],
+   "p50_ms": 689.0867600000092,
+   "p95_ms": 2495.792751999943,
+   "p99_ms": 2787.772096000026,
+   "max_ms": 2889.4401540001127,
+   "catalog_p50_ms": 22.77175999984138,
+   "mean_ms": 907.2603979488624,
+   "rows_found": 391,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.501334356999905,
+   "commits": 393,
+   "errors": 239,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 18,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 3
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 239,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.287865755877027,
+   "per_writer_commits": [
+    17,
+    18,
+    18,
+    19,
+    22,
+    22,
+    24,
+    24,
+    25,
+    26,
+    27,
+    28,
+    28,
+    29,
+    30,
+    36
+   ],
+   "p50_ms": 755.6794430001901,
+   "p95_ms": 2485.0625760000185,
+   "p99_ms": 2928.757072000053,
+   "max_ms": 2988.9997730001596,
+   "catalog_p50_ms": 22.19804500009559,
+   "mean_ms": 977.013670888043,
+   "rows_found": 393,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.68560874800005,
+   "commits": 396,
+   "errors": 245,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 17,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 3
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 245,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 6.317239441543019,
+   "per_writer_commits": [
+    17,
+    18,
+    19,
+    20,
+    20,
+    20,
+    20,
+    21,
+    25,
+    25,
+    26,
+    27,
+    28,
+    35,
+    36,
+    39
+   ],
+   "p50_ms": 617.3780879998958,
+   "p95_ms": 2716.83000500002,
+   "p99_ms": 2869.911221999928,
+   "max_ms": 2928.7206120000064,
+   "catalog_p50_ms": 23.507654000013645,
+   "mean_ms": 936.6904090757542,
+   "rows_found": 396,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 63.02505355899984,
+   "commits": 341,
+   "errors": 551,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 41,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 5
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 551,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 5.410546770591454,
+   "per_writer_commits": [
+    3,
+    4,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9,
+    10,
+    10,
+    11,
+    11,
+    11,
+    11,
+    12,
+    12,
+    15,
+    15,
+    16,
+    16,
+    16,
+    20,
+    20,
+    22
+   ],
+   "p50_ms": 964.7912010000255,
+   "p95_ms": 3162.3196410000673,
+   "p99_ms": 3475.745889999871,
+   "max_ms": 3758.301506999942,
+   "catalog_p50_ms": 25.8569139998599,
+   "mean_ms": 1211.1687721319727,
+   "rows_found": 341,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 63.029920392999884,
+   "commits": 339,
+   "errors": 557,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 46,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 6
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 557,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 5.378398035191703,
+   "per_writer_commits": [
+    4,
+    5,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    8,
+    9,
+    9,
+    9,
+    9,
+    9,
+    10,
+    11,
+    11,
+    11,
+    11,
+    11,
+    12,
+    12,
+    12,
+    13,
+    14,
+    14,
+    15,
+    15,
+    16,
+    16,
+    17,
+    18
+   ],
+   "p50_ms": 989.2135909999524,
+   "p95_ms": 2942.329842999925,
+   "p99_ms": 3324.8176009999497,
+   "max_ms": 3591.880372000105,
+   "catalog_p50_ms": 26.46121799989487,
+   "mean_ms": 1188.2541071120984,
+   "rows_found": 339,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 62.90454729899989,
+   "commits": 338,
+   "errors": 539,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 44,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 6
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 539,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 5.373220450874683,
+   "per_writer_commits": [
+    4,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    8,
+    8,
+    8,
+    8,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9,
+    12,
+    13,
+    13,
+    13,
+    13,
+    14,
+    14,
+    14,
+    16,
+    17,
+    18,
+    18,
+    21
+   ],
+   "p50_ms": 939.3501819999983,
+   "p95_ms": 3056.869807999874,
+   "p99_ms": 3542.6984010000524,
+   "max_ms": 3592.5182219998533,
+   "catalog_p50_ms": 26.676861999931134,
+   "mean_ms": 1204.0351099763386,
+   "rows_found": 338,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 64,
+   "target_seconds": 60.0,
+   "seconds": 64.18565636199992,
+   "commits": 258,
+   "errors": 856,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 53,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 12
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 856,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 4.019589650137857,
+   "per_writer_commits": [
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    8,
+    9,
+    9,
+    10,
+    10,
+    10,
+    15
+   ],
+   "p50_ms": 1682.2017449999294,
+   "p95_ms": 4345.68907899984,
+   "p99_ms": 5002.588711000044,
+   "max_ms": 5469.416002999878,
+   "catalog_p50_ms": 36.905515999933414,
+   "mean_ms": 1920.8264304263646,
+   "rows_found": 258,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 64,
+   "target_seconds": 60.0,
+   "seconds": 63.8651738399999,
+   "commits": 261,
+   "errors": 840,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 56,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 12
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 840,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 4.086734354687234,
+   "per_writer_commits": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    7,
+    8,
+    9,
+    9,
+    11
+   ],
+   "p50_ms": 1670.2164789999188,
+   "p95_ms": 4398.238718999892,
+   "p99_ms": 5068.564297999956,
+   "max_ms": 5110.4903200000535,
+   "catalog_p50_ms": 33.43809800003328,
+   "mean_ms": 1916.8504006015348,
+   "rows_found": 261,
+   "verified": true
+  },
+  {
+   "system": "polaris",
+   "writers": 64,
+   "target_seconds": 60.0,
+   "seconds": 63.798058524,
+   "commits": 260,
+   "errors": 818,
+   "error_samples": {
+    "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified": 54,
+    "CommitFailedException: CommitFailedException: Requirement failed: branch main has changed: expected id <id> != <id>": 12
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 818,
+     "example": "CommitFailedException: CommitConflictException: Failed to commit Table or View bench.commits because it was concurrently modified"
+    }
+   },
+   "commits_per_s": 4.075359125578898,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    8,
+    8,
+    8,
+    11
+   ],
+   "p50_ms": 1829.8319949999495,
+   "p95_ms": 4850.160865000134,
+   "p99_ms": 5358.2725629999,
+   "max_ms": 5689.878614999998,
+   "catalog_p50_ms": 34.038935999888054,
+   "mean_ms": 2054.2569260115365,
+   "rows_found": 260,
+   "verified": true
+  }
+ ]
+}

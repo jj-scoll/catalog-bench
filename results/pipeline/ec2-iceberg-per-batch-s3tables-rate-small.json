@@ -1,0 +1,67 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T07:23:08+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "iceberg-per-batch": "pyiceberg 0.12.0, pyarrow 26.0.1; pyiceberg 0.12.0, pyarrow 26.0.1, S3 Tables REST endpoint in ca-central-1, 1 table(s)"
+ },
+ "descriptions": {
+  "iceberg-per-batch": "Iceberg through pyiceberg, one commit per batch. Each batch appends its output rows and then its error rows, as\ntwo commits, to tables partitioned by trace. Closing a trace deletes the trace's older versions and appends its new\nversion to a control table, as three more commits. Readers take the recorded version and one delivery per batch.\nNo maintenance is run."
+ },
+ "results": [
+  {
+   "option": "iceberg-per-batch",
+   "traces": 3,
+   "batches_per_trace": 300,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": 1.25,
+   "redelivered": 18,
+   "load_seconds": 810.2080159759998,
+   "batches_committed": 900,
+   "batches_failed": 0,
+   "batches_per_s": 1.1330423568991117,
+   "write_errors": 0,
+   "finalize_errors": 0,
+   "error_types": {},
+   "commit_p50_ms": 6132.918244999928,
+   "commit_p95_ms": 25678.161484000157,
+   "commit_p99_ms": 38603.72375199995,
+   "commit_max_ms": 89190.0735170002,
+   "behind_p95_ms": 36277.9337689999,
+   "behind_max_ms": 49679.088710999626,
+   "fresh_samples": 177,
+   "fresh_skipped": 3,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 0.3473660003692203,
+   "visible_after_p95_ms": 6.835118999788392,
+   "visible_after_max_ms": 45.269807999829936,
+   "fresh_read_p50_ms": 544.3875619998835,
+   "fresh_read_p95_ms": 896.0756120000042,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 26645.139070999903,
+   "finalize_max_ms": 27367.547259000276,
+   "read_trace_p50_ms": 2167.3724199999924,
+   "read_trace_max_ms": 2226.3394110000263,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 212.54906014000017,
+   "reprocess_finalize_ms": 38701.30008199976,
+   "reprocess_read_ms": 1347.27770399968,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": null,
+   "read_trace_after_maintain_p50_ms": null,
+   "verified_after_maintain": null
+  }
+ ]
+}

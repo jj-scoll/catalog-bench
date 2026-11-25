@@ -4,27 +4,30 @@ How many commits per second does a lakehouse catalog accept, and what happens to
 
 This is an open benchmark: one small file per system, one results format, and every number reproducible from this repository.
 
-**Status: early.** Six systems are implemented: raw Postgres as a baseline, DuckLake on Postgres, the Iceberg SQL catalog on Postgres, Amazon S3 Tables, Lakekeeper and Polaris. The first four have a published in-region run; Lakekeeper and Polaris do not yet.
+**Status: early.** Six systems are implemented: raw Postgres as a baseline, DuckLake on Postgres, the Iceberg SQL catalog on Postgres, Amazon S3 Tables, Lakekeeper and Polaris. All six have a published in-region run. A second workload, a whole pipeline flow, has its first results in `results/pipeline/`.
 
 ## Results so far
 
-One run on one machine, on 2026-11-25: an EC2 c6id.4xlarge (16 vCPUs, instance-store NVMe) in ca-central-1, with Postgres 18 in Docker on the same host and S3 Tables in the same region. Each point is the median of three 60-second runs. Every run passed verification. The raw numbers are in `results/`.
+Two passes on 2026-11-25, each system on its own EC2 c6id.4xlarge (16 vCPUs, instance-store NVMe) in ca-central-1, with Postgres 18 in Docker on the same host and S3 Tables in the same region. The second pass used different instances of the same type from the first. Each point is the median of three 60-second runs. Every run passed verification. The raw numbers are in `results/`.
 
 | System | 1 writer | 16 writers | Most writers measured | What limits it |
 |---|---|---|---|---|
 | Postgres (baseline) | 8,240 | 51,054 | 81,667 at 64 | Nothing reached; still rising |
-| DuckLake on Postgres | 189 | 178 | 170 at 32 | Does not scale with writers, and writers starve: in every run with more than one writer, a single writer made all but a handful of the commits and each of the others made one or none |
+| DuckLake on Postgres | 189 | 178 | 161 at 64 | Does not scale with writers, and writers starve: in every run with more than one writer, a single writer made all but a handful of the commits and each of the others made one or none |
+| DuckLake on Postgres, inlining off | 162 | 145 | 124 at 64 | The same pattern, about 15% lower at one writer: every commit now writes a Parquet file |
 | S3 Tables, one table per writer | 1.9 | 29.7 | 49.1 at 64 | Scales with tables until the service throttles: 45% of attempts at 64 writers were refused with Too Many Requests |
-| Iceberg SQL catalog on Postgres | 7.9 | 7.9 | 7.9 at 16 | The client: the catalog call is 11 ms of a 128 ms commit, and conflicts take the rest as writers are added |
+| Iceberg SQL catalog on Postgres | 7.9 | 7.9 | 5.1 at 64 | The client: the catalog call is 11 ms of a 128 ms commit, and conflicts take the rest as writers are added. 7.0 at 32 |
+| Lakekeeper | 6.7 | 6.5 | 4.3 at 64 | The client: the catalog call is 17 ms of a 149 ms commit at one writer. Flat to 16 writers, then conflicts cost throughput |
+| Polaris | 6.5 | 6.3 | 4.1 at 64 | The client: the catalog call is 26 ms of a 157 ms commit at one writer. Same shape as Lakekeeper |
 | S3 Tables, one shared table | 1.9 | 2.1 | 1.9 at 64 | Commit conflicts, then throttling; the catalog call is 72 ms of a 528 ms commit |
 
 All figures are acknowledged commits per second.
 
 What this run does not show:
 
-- For the three Iceberg rows the Python client (pyiceberg) and its object writes take most of each commit, so these are rates for that client, not ceilings for the catalogs. A catalog-only workload is planned.
-- The DuckLake row is not like for like with the Iceberg rows. With default settings DuckLake keeps a single-row insert inline in the catalog database and writes no Parquet file, so its commit is one Postgres transaction. The Iceberg rows write data and metadata files on every commit. A DuckLake run with inlining turned off is planned.
-- The Iceberg SQL ramp stopped at 16 writers and the DuckLake ramp at 32, because the machine's time budget ran out. A single DuckLake run at 64 writers (164 commits per second) is left out for having no repetitions.
+- For the five Iceberg rows the Python client (pyiceberg) and its object writes take most of each commit, so these are rates for that client, not ceilings for the catalogs. A catalog-only workload is planned.
+- The DuckLake row is not like for like with the Iceberg rows. With default settings DuckLake keeps a single-row insert inline in the catalog database and writes no Parquet file, so its commit is one Postgres transaction. The Iceberg rows write data and metadata files on every commit. The "inlining off" row is the closer comparison.
+- The Iceberg SQL points at 32 and 64 writers, the DuckLake point at 64, and the Lakekeeper, Polaris and inlining-off rows come from the second pass, so they ran on different instances from the rest.
 - Error messages in the published files have long numeric identifiers replaced with `<id>`.
 
 ## What is measured
@@ -93,6 +96,8 @@ uv run python -m bench.pipeline --options files ducklake iceberg-per-batch icebe
 | `iceberg-per-trace` | plain Parquet files outside the table | two commits that replace the trace's rows in the tables |
 
 The two Iceberg options run on any Iceberg system in `bench/systems`, chosen with `BENCH_ICEBERG_CATALOG` (`iceberg-sql-postgres`, `s3-tables`, `lakekeeper` or `polaris`). `ducklake` uses the Postgres in `BENCH_PG`. `BENCH_PIPELINE_DATA` is where `files`, `ducklake` and the `iceberg-per-trace` files go: a local directory or an `s3://` URI.
+
+First results are in `results/pipeline/`, one file per run, named for the option, what backed it and the run shape; each is a single run. Two known gaps: the Iceberg options cannot yet reset Lakekeeper or Polaris for a second run, so those have one run each, and the results site does not show this workload yet.
 
 To add an option, copy `bench/options/files.py`; the interface is at the top of `bench/options/__init__.py`. Each option's docstring states what it does at every step, and that text is saved with the results.
 

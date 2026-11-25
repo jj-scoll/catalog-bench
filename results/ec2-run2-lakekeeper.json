@@ -1,0 +1,971 @@
+{
+ "environment": "EC2 c6id.4xlarge, ca-central-1, local NVMe, Postgres 18 in Docker",
+ "ran_at": "2026-11-25T06:31:43+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "lakekeeper": "Lakekeeper 0.15.1, RustFS 1.0.6, pyiceberg 0.12.0, pyarrow 26.0.1"
+ },
+ "descriptions": {
+  "lakekeeper": "Lakekeeper (Iceberg REST catalog, metadata in Postgres) via pyiceberg, data in a local RustFS object store.\nOne single-row append per commit, with pyiceberg's default retry-with-backoff. Server and client defaults."
+ },
+ "harness_ceiling": [
+  {
+   "writers": 1,
+   "commits_per_s": 5587310.333503251
+  }
+ ],
+ "results": [
+  {
+   "system": "lakekeeper",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.145019813000005,
+   "commits": 405,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 6.733724608607769,
+   "per_writer_commits": [
+    405
+   ],
+   "p50_ms": 149.46123100000364,
+   "p95_ms": 250.45926999999324,
+   "p99_ms": 271.5086190000022,
+   "max_ms": 277.29851800000915,
+   "catalog_p50_ms": 17.49392100001046,
+   "mean_ms": 148.50553038271568,
+   "rows_found": 405,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.228519670000026,
+   "commits": 406,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 6.740992510268015,
+   "per_writer_commits": [
+    406
+   ],
+   "p50_ms": 147.05400100001498,
+   "p95_ms": 249.80462899998201,
+   "p99_ms": 273.7525239999741,
+   "max_ms": 278.9634869999986,
+   "catalog_p50_ms": 16.740246999972896,
+   "mean_ms": 148.34540816994974,
+   "rows_found": 406,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.05093114500005,
+   "commits": 406,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 6.760927636903167,
+   "per_writer_commits": [
+    406
+   ],
+   "p50_ms": 150.01302699999997,
+   "p95_ms": 247.0576300000289,
+   "p99_ms": 268.7152490000244,
+   "max_ms": 275.8768729999588,
+   "catalog_p50_ms": 16.86990899997909,
+   "mean_ms": 147.9080084334976,
+   "rows_found": 406,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.37455116700005,
+   "commits": 403,
+   "errors": 10,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 10,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.674997862680172,
+   "per_writer_commits": [
+    190,
+    213
+   ],
+   "p50_ms": 156.94182999999384,
+   "p95_ms": 901.9274959999848,
+   "p99_ms": 2114.7075369999584,
+   "max_ms": 2462.0413320000125,
+   "catalog_p50_ms": 17.105873000048177,
+   "mean_ms": 244.69057236476408,
+   "rows_found": 403,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.49532525300003,
+   "commits": 403,
+   "errors": 10,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 10,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.6616717624807675,
+   "per_writer_commits": [
+    160,
+    243
+   ],
+   "p50_ms": 156.19779299998982,
+   "p95_ms": 885.6439769999724,
+   "p99_ms": 2191.8525930000214,
+   "max_ms": 2334.752102999971,
+   "catalog_p50_ms": 16.96706100000256,
+   "mean_ms": 244.63772889082006,
+   "rows_found": 403,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.36383004200002,
+   "commits": 402,
+   "errors": 11,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 11,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.65961718665459,
+   "per_writer_commits": [
+    139,
+    263
+   ],
+   "p50_ms": 163.08552599997483,
+   "p95_ms": 853.0642120000493,
+   "p99_ms": 2209.7749079999858,
+   "max_ms": 2487.930051000035,
+   "catalog_p50_ms": 16.84921899999381,
+   "mean_ms": 238.95861435323187,
+   "rows_found": 402,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.18674042200007,
+   "commits": 411,
+   "errors": 30,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 30,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.717141608874174,
+   "per_writer_commits": [
+    79,
+    87,
+    113,
+    132
+   ],
+   "p50_ms": 201.70742599998448,
+   "p95_ms": 1503.1848410000066,
+   "p99_ms": 2534.4862629999625,
+   "max_ms": 2614.9677829999973,
+   "catalog_p50_ms": 17.293347999952857,
+   "mean_ms": 427.79513951824794,
+   "rows_found": 411,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.97519290299999,
+   "commits": 406,
+   "errors": 29,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 29,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.551008249953298,
+   "per_writer_commits": [
+    78,
+    97,
+    98,
+    133
+   ],
+   "p50_ms": 244.29745400004776,
+   "p95_ms": 1401.4687160000676,
+   "p99_ms": 2552.586609000059,
+   "max_ms": 2610.1473229999783,
+   "catalog_p50_ms": 17.39628600000742,
+   "mean_ms": 432.75731952217046,
+   "rows_found": 406,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.116018720000056,
+   "commits": 408,
+   "errors": 30,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 30,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.6758275251735775,
+   "per_writer_commits": [
+    90,
+    93,
+    94,
+    131
+   ],
+   "p50_ms": 205.33857299994906,
+   "p95_ms": 1479.073774000085,
+   "p99_ms": 2235.3179770000224,
+   "max_ms": 2501.497513000004,
+   "catalog_p50_ms": 17.387800000051357,
+   "mean_ms": 426.38634643137846,
+   "rows_found": 408,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.49367070599999,
+   "commits": 410,
+   "errors": 96,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 2
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 96,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.560664389980153,
+   "per_writer_commits": [
+    38,
+    47,
+    48,
+    48,
+    50,
+    57,
+    60,
+    62
+   ],
+   "p50_ms": 387.6839060000066,
+   "p95_ms": 2269.6696089999477,
+   "p99_ms": 2599.119836,
+   "max_ms": 2757.4309609999546,
+   "catalog_p50_ms": 18.299628000022494,
+   "mean_ms": 645.6167699609764,
+   "rows_found": 410,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.13371922099998,
+   "commits": 412,
+   "errors": 81,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 81,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.630860105679173,
+   "per_writer_commits": [
+    38,
+    49,
+    49,
+    51,
+    53,
+    54,
+    55,
+    63
+   ],
+   "p50_ms": 484.6030219999875,
+   "p95_ms": 2353.9263549999987,
+   "p99_ms": 2643.130463000034,
+   "max_ms": 2731.676967999988,
+   "catalog_p50_ms": 18.821494999997412,
+   "mean_ms": 722.0362322257287,
+   "rows_found": 412,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.04537607899988,
+   "commits": 414,
+   "errors": 83,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 1
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 83,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.672535911022128,
+   "per_writer_commits": [
+    33,
+    35,
+    45,
+    45,
+    54,
+    61,
+    63,
+    78
+   ],
+   "p50_ms": 444.9556099999654,
+   "p95_ms": 2341.8718299999455,
+   "p99_ms": 2622.14361000008,
+   "max_ms": 2760.260193000022,
+   "catalog_p50_ms": 18.454941000072722,
+   "mean_ms": 708.324182567634,
+   "rows_found": 414,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.69469564399992,
+   "commits": 408,
+   "errors": 243,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 3
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 243,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.507727580603493,
+   "per_writer_commits": [
+    14,
+    18,
+    21,
+    21,
+    22,
+    23,
+    23,
+    24,
+    25,
+    26,
+    29,
+    30,
+    32,
+    32,
+    32,
+    36
+   ],
+   "p50_ms": 661.8911040000057,
+   "p95_ms": 2620.6089820000216,
+   "p99_ms": 2791.3895780000075,
+   "max_ms": 2883.4482809998008,
+   "catalog_p50_ms": 20.14186199994583,
+   "mean_ms": 948.2660379681395,
+   "rows_found": 408,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.459076947000085,
+   "commits": 409,
+   "errors": 248,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 3
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 248,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.548287614737865,
+   "per_writer_commits": [
+    13,
+    16,
+    18,
+    21,
+    24,
+    24,
+    25,
+    26,
+    26,
+    27,
+    28,
+    28,
+    30,
+    32,
+    33,
+    38
+   ],
+   "p50_ms": 653.6107760000505,
+   "p95_ms": 2592.3196650001046,
+   "p99_ms": 2765.743847000067,
+   "max_ms": 2832.81874599993,
+   "catalog_p50_ms": 19.9502120001398,
+   "mean_ms": 905.9292198410766,
+   "rows_found": 409,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.20499455899994,
+   "commits": 410,
+   "errors": 236,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 3
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 236,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 6.591110615902793,
+   "per_writer_commits": [
+    16,
+    20,
+    20,
+    21,
+    21,
+    22,
+    23,
+    25,
+    25,
+    25,
+    28,
+    28,
+    29,
+    30,
+    35,
+    42
+   ],
+   "p50_ms": 678.7602049998895,
+   "p95_ms": 2600.859507999985,
+   "p99_ms": 2809.913198000004,
+   "max_ms": 2880.105900999979,
+   "catalog_p50_ms": 20.44169700002385,
+   "mean_ms": 956.9790304292633,
+   "rows_found": 410,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 63.20247747600001,
+   "commits": 360,
+   "errors": 558,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 5
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 558,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 5.69597924601458,
+   "per_writer_commits": [
+    3,
+    4,
+    5,
+    5,
+    6,
+    7,
+    7,
+    8,
+    8,
+    8,
+    9,
+    10,
+    10,
+    10,
+    11,
+    11,
+    12,
+    12,
+    12,
+    13,
+    14,
+    14,
+    14,
+    15,
+    15,
+    15,
+    16,
+    16,
+    17,
+    17,
+    18,
+    18
+   ],
+   "p50_ms": 914.8880989998815,
+   "p95_ms": 3153.2627870001306,
+   "p99_ms": 3375.3503860000365,
+   "max_ms": 3493.981513000108,
+   "catalog_p50_ms": 25.034477999952287,
+   "mean_ms": 1201.3318005166657,
+   "rows_found": 360,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 62.871748284000205,
+   "commits": 356,
+   "errors": 546,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 5
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 546,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 5.662320672106966,
+   "per_writer_commits": [
+    5,
+    5,
+    6,
+    6,
+    6,
+    8,
+    8,
+    8,
+    9,
+    9,
+    9,
+    10,
+    10,
+    10,
+    10,
+    10,
+    11,
+    11,
+    11,
+    12,
+    12,
+    13,
+    13,
+    13,
+    13,
+    13,
+    13,
+    14,
+    15,
+    20,
+    20,
+    23
+   ],
+   "p50_ms": 1059.6534229998724,
+   "p95_ms": 3046.3396110001213,
+   "p99_ms": 3400.0881419999587,
+   "max_ms": 3506.039191999889,
+   "catalog_p50_ms": 25.095719000091776,
+   "mean_ms": 1263.2876962556124,
+   "rows_found": 356,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 63.11489378600004,
+   "commits": 353,
+   "errors": 554,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 6
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 554,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 5.5929746344325055,
+   "per_writer_commits": [
+    4,
+    4,
+    5,
+    5,
+    5,
+    6,
+    7,
+    8,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9,
+    9,
+    10,
+    11,
+    11,
+    12,
+    12,
+    12,
+    13,
+    13,
+    15,
+    15,
+    15,
+    15,
+    15,
+    16,
+    18,
+    20,
+    23
+   ],
+   "p50_ms": 989.8473929999909,
+   "p95_ms": 2920.372972999985,
+   "p99_ms": 3525.170105999905,
+   "max_ms": 3593.9098009998816,
+   "catalog_p50_ms": 25.382768999861582,
+   "mean_ms": 1184.329245807365,
+   "rows_found": 353,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 64,
+   "target_seconds": 60.0,
+   "seconds": 63.38135324399991,
+   "commits": 271,
+   "errors": 868,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 11
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 868,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 4.275705489542457,
+   "per_writer_commits": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    7,
+    8,
+    9,
+    9,
+    9,
+    9,
+    10,
+    15
+   ],
+   "p50_ms": 1434.4389609998416,
+   "p95_ms": 4217.169583999976,
+   "p99_ms": 4818.295914000146,
+   "max_ms": 4865.09310800011,
+   "catalog_p50_ms": 36.27240400010123,
+   "mean_ms": 1748.0761243837578,
+   "rows_found": 271,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 64,
+   "target_seconds": 60.0,
+   "seconds": 63.58138424399999,
+   "commits": 273,
+   "errors": 861,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 11
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 861,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 4.293709601419417,
+   "per_writer_commits": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    8,
+    9,
+    10,
+    10,
+    12,
+    12
+   ],
+   "p50_ms": 1741.3363629998457,
+   "p95_ms": 4229.792305000046,
+   "p99_ms": 4690.031677999968,
+   "max_ms": 5079.2747289999625,
+   "catalog_p50_ms": 36.65165799998249,
+   "mean_ms": 1895.8487204065902,
+   "rows_found": 273,
+   "verified": true
+  },
+  {
+   "system": "lakekeeper",
+   "writers": 64,
+   "target_seconds": 60.0,
+   "seconds": 63.37630454399982,
+   "commits": 270,
+   "errors": 866,
+   "error_samples": {
+    "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed": 10
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 866,
+     "example": "CommitFailedException: CatalogCommitConflicts: CatalogCommitConflicts, context: { expected: <id>, found: <id> } => Requirement failed: Branch or tag `main`'s snapshot has changed"
+    }
+   },
+   "commits_per_s": 4.260267334024643,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    6,
+    6,
+    6,
+    7,
+    7,
+    7,
+    7,
+    7,
+    7,
+    8,
+    8,
+    8,
+    9
+   ],
+   "p50_ms": 1609.1658530001496,
+   "p95_ms": 4234.783345999858,
+   "p99_ms": 5068.163293999987,
+   "max_ms": 5238.606325000092,
+   "catalog_p50_ms": 38.822985000024346,
+   "mean_ms": 1830.5330288185157,
+   "rows_found": 270,
+   "verified": true
+  }
+ ]
+}

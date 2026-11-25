@@ -1,0 +1,72 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T07:27:17+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "ducklake": "DuckDB 2.0.1, ducklake extension 08089b16dc, format 1.1, PostgreSQL 16.8"
+ },
+ "descriptions": {
+  "ducklake": "DuckLake with default settings, metadata in Postgres. Each batch is one transaction that inserts its output and\nerror rows. Closing a trace is one transaction that deletes the trace's older versions and records the new one;\nDuckLake aborts a delete that races an insert into the same table, so the finaliser retries. Readers take the\nrecorded version and one delivery per batch. Maintenance merges adjacent data files."
+ },
+ "results": [
+  {
+   "option": "ducklake",
+   "traces": 4,
+   "batches_per_trace": 500,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": null,
+   "redelivered": 40,
+   "load_seconds": 83.81628232699995,
+   "batches_committed": 2000,
+   "batches_failed": 0,
+   "batches_per_s": 24.338946364158286,
+   "write_errors": 8,
+   "finalize_errors": 0,
+   "error_types": {
+    "TransactionException": {
+     "count": 9,
+     "example": "TransactionException: TransactionContext Error: cannot rollback - no transaction is active"
+    }
+   },
+   "commit_p50_ms": 301.9244580000304,
+   "commit_p95_ms": 1879.8949389997688,
+   "commit_p99_ms": 5900.1770180002495,
+   "commit_max_ms": 10499.69254000007,
+   "behind_p95_ms": null,
+   "behind_max_ms": null,
+   "fresh_samples": 397,
+   "fresh_skipped": 3,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 5.886404000193579,
+   "visible_after_p95_ms": 25.231880999854184,
+   "visible_after_max_ms": 44.09500300016589,
+   "fresh_read_p50_ms": 51.93931000030716,
+   "fresh_read_p95_ms": 60.64183399985268,
+   "finalize_retries": 1,
+   "finalize_p50_ms": 18.871480000143492,
+   "finalize_max_ms": 267.32877499989627,
+   "read_trace_p50_ms": 286.9575839999925,
+   "read_trace_max_ms": 466.203761000088,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 12.270082207000087,
+   "reprocess_finalize_ms": 850.6292800002484,
+   "reprocess_read_ms": 229.90656199999648,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": 2.252941230000033,
+   "read_trace_after_maintain_p50_ms": 160.5455769999935,
+   "verified_after_maintain": true
+  }
+ ]
+}
