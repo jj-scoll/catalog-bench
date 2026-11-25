@@ -27,6 +27,7 @@ import time
 from collections import Counter
 from datetime import UTC, datetime
 
+import duckdb
 import pyarrow as pa
 
 DELIVERIES = 3
@@ -186,14 +187,19 @@ def _check(conn, trace, version, batches, rows):
     start = time.monotonic()
     table = conn.read_trace(trace)
     seconds = time.monotonic() - start
-    got = Counter(zip(table["version"].to_pylist(), table["batch"].to_pylist(), table["row"].to_pylist()))
-    stale = sum(n for (v, b, r), n in got.items() if v != version or b not in batches or r >= rows)
-    current = {(b, r): n for (v, b, r), n in got.items() if v == version and b in batches and r < rows}
+    with duckdb.connect() as db:  # in DuckDB because a large trace is tens of millions of rows
+        db.register("got", table)
+        db.register("wanted", pa.table({"batch": pa.array(sorted(batches), pa.int32())}))
+        total, in_place, expected = db.execute(
+            "SELECT count(*), count(*) FILTER (ok), count(DISTINCT (batch, row)) FILTER (ok) FROM "
+            "(SELECT batch, row, version = ? AND row < ? AND batch IN (FROM wanted) AS ok FROM got)",
+            (version, rows),
+        ).fetchone()
     return {
         "seconds": seconds,
-        "missing": len(batches) * rows - len(current),
-        "duplicated": sum(n - 1 for n in current.values()),
-        "stale": stale,
+        "missing": len(batches) * rows - expected,
+        "duplicated": in_place - expected,
+        "stale": total - in_place,
     }
 
 
