@@ -5,6 +5,8 @@ import os
 PG = os.environ.get("BENCH_PG", "host=localhost port=55432 user=postgres password=bench")
 DATA_PATH = os.environ.get("BENCH_DATA_PATH", os.path.abspath(".data/lake")) + "/"
 PG_URL = os.environ.get("BENCH_PG_URL", "postgresql+psycopg2://postgres:bench@localhost:55432")
+# Where pipeline options keep their files: a local directory or an s3://bucket/prefix URI.
+PIPELINE_DATA = os.environ.get("BENCH_PIPELINE_DATA", os.path.abspath(".data/pipeline")).rstrip("/")
 ICEBERG_WAREHOUSE = os.environ.get("BENCH_ICEBERG_WAREHOUSE", os.path.abspath(".data/iceberg"))
 
 # Object store and REST catalogs (lakekeeper, polaris). The credentials are the throwaway ones in compose.yaml.
