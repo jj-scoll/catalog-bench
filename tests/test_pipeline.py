@@ -158,7 +158,10 @@ def test_every_registered_option_says_what_it_measures_and_has_the_interface():
             assert callable(getattr(cls, method, None)), f"{name} is missing {method}()"
 
 
-@pytest.mark.parametrize("name", ["ducklake", "iceberg-per-batch", "iceberg-per-trace"])
+@pytest.mark.parametrize("name", [
+    "ducklake", "iceberg-per-batch", "iceberg-per-trace", "vortex", "delta-per-batch", "delta-per-trace", "lance-per-batch",
+    "lance-per-trace",
+])
 def test_each_option_passes_the_whole_flow_locally(name, tmp_path):
     if name == "ducklake":  # the only option that cannot run without a service: its catalog is the Postgres in compose.yaml
         try:

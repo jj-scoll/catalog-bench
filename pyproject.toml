@@ -4,9 +4,11 @@ version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.44.11",
+    "deltalake>=1.7.0",
     "duckdb>=2.0.1",
     "psycopg[binary]>=3.3.9",
     "pyiceberg[pyarrow,sql-postgres]>=0.12.0",
+    "pylance>=14.0.3",
 ]
 
 [dependency-groups]
