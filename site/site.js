@@ -182,7 +182,7 @@ function renderBoard(env) {
 function renderFairness(env) {
   let worst = null;
   $("fair").replaceChildren(...env.systems.map((x) => h("div", {},
-    h("h3", {}, key(x.name), x.name),
+    h("h4", {}, key(x.name), x.name),
     h("table", {},
       h("thead", {}, h("tr", {}, h("th", { class: "n" }, "Writers"), h("th", {}, "Commits per writer, fewest to most"), h("th", { class: "n" }, "Median commit"), h("th", { class: "n" }, "Slowest commit"))),
       h("tbody", {}, ...x.points.map((p) => {
@@ -221,6 +221,108 @@ function renderDetail(env) {
         : "No failed commits recorded.")))));
 }
 
+/* ---------- pipeline workload ---------- */
+
+// Milliseconds under one second, otherwise seconds with one decimal (and minutes alongside once that stops being readable).
+function dur(v) {
+  if (!isNum(v)) return "not recorded";
+  if (v < 1) return "under 1 ms";
+  if (Math.round(v) < 1000) return Math.round(v) + " ms";
+  const sec = v / 1000, text = sec.toLocaleString("en-US", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + " s";
+  return sec >= 120 ? `${text} (${Math.round(sec / 60)} min)` : text;
+}
+const flag = (text) => h("strong", { class: "flag" }, text);
+const small = (...kids) => h("small", {}, ...kids);
+
+function shapeLoad(shape) {
+  const parts = [];
+  if (isNum(shape.traces) && isNum(shape.batches_per_trace)) {
+    parts.push(`${plural(shape.traces, "trace")} of ${int(shape.batches_per_trace)} batches` + (shape.traces > 1 ? ` (${int(shape.traces * shape.batches_per_trace)} batches in all)` : ""));
+  }
+  parts.push(isNum(shape.target_batches_per_s) ? `paced at ${rate(shape.target_batches_per_s)} batches per second` : "unpaced, so workers take batches as fast as the option accepts them");
+  for (const [k, word] of [["rows_per_batch", "rows per batch"], ["workers", "workers"]]) {
+    const said = [...new Set(shape.runs.map((r) => r[k]).filter(isNum))];
+    if (said.length === 1) parts.push(`${int(said[0])} ${word}`);
+  }
+  return parts.join(", ") + ".";
+}
+
+function keptUp(r) {
+  const achieved = isNum(r.batches_per_s) ? rate(r.batches_per_s) : null;
+  if (!isNum(r.target_batches_per_s)) return [achieved ? h("span", { class: "big" }, achieved + " batches/s") : "not recorded", small("unpaced, no schedule to keep")];
+  return [
+    r.kept_up === true ? h("span", { class: "mark yes" }, "Kept up") : r.kept_up === false ? flag("Fell behind") : h("span", { class: "mark" }, "Not recorded"),
+    small(`${achieved || "?"} of ${rate(r.target_batches_per_s)} batches/s asked`),
+    isNum(r.behind_max_ms) ? small(r.behind_max_ms < 1 ? "on schedule throughout" : `up to ${dur(r.behind_max_ms)} late`) : null,
+  ];
+}
+
+function verifiedCell(r) {
+  if (r.all_verified === true) return [h("span", { class: "mark yes" }, "Verified")];
+  if (r.all_verified !== false) return [h("span", { class: "mark" }, "Not recorded")];
+  const why = [["rows_missing", "missing"], ["rows_duplicated", "duplicated"], ["rows_stale", "stale"]].filter(([k]) => r[k] > 0).map(([k, word]) => `${int(r[k])} rows ${word}`);
+  if (r.verified === false && !why.length) why.push("rows did not match");
+  if (r.reprocess_verified === false) why.push("reprocessed trace did not match");
+  if (r.verified_after_maintain === false) why.push("did not match after compaction");
+  return [flag("Not verified"), small(why.join("; "))];
+}
+
+function pipelineRow(r, cols) {
+  const cell = (i, cls, ...kids) => h("td", { class: cls, "data-label": cols[i] }, ...kids.flat());
+  const name = h("th", { scope: "row", class: "sysname" }, r.option, small(r.backing_label || r.backing || ""));
+  if (r.failed != null) return h("tr", {}, name, h("td", { colspan: cols.length - 1 }, flag("Run failed"), small(r.failed)));
+  const lost = r.batches_failed > 0;
+  return h("tr", { class: r.kept_up === false || r.all_verified === false || lost ? "trouble" : null }, name,
+    cell(1, null, keptUp(r)),
+    cell(2, "n", dur(r.commit_p50_ms), small("p95 " + dur(r.commit_p95_ms))),
+    cell(3, "n", dur(r.finalize_max_ms), r.finalize_retries > 0 ? small(plural(r.finalize_retries, "retry").replace("retrys", "retries")) : null),
+    cell(4, "n", dur(r.read_trace_p50_ms), isNum(r.read_trace_after_maintain_p50_ms) ? small("after compaction " + dur(r.read_trace_after_maintain_p50_ms)) : null),
+    cell(5, "n", !isNum(r.write_errors) ? "not recorded" : r.write_errors === 0 ? "none" : int(r.write_errors),
+      r.write_errors > 0 && !lost ? small("all delivered again") : null,
+      lost ? [flag(`${plural(r.batches_failed, "batch").replace("batchs", "batches")} never written`)] : null),
+    cell(6, null, verifiedCell(r)));
+}
+
+function renderPipeline(p) {
+  const status = $("pipeline-status");
+  const shapes = (p && p.shapes) || [];
+  if (!shapes.length) {
+    status.textContent = 'No pipeline results yet. Run "python -m bench.pipeline" so it writes a file into results/pipeline/, then run "python -m bench.site".';
+    return;
+  }
+  status.remove();
+  if (isNum(p.behind_limit_ms) && p.behind_limit_ms !== 1000) $("behind-limit").textContent = dur(p.behind_limit_ms);
+  const cols = ["Option and backing", "Kept up", "Batch write, median and p95", "Close a trace, slowest", "Read one trace, median", "Failed writes", "Verified"];
+  $("pipeline-shapes").replaceChildren(...shapes.map((shape) => {
+    const id = "shape-" + shape.id.replace(/[^a-z0-9]+/gi, "-");
+    const trouble = shape.runs.filter((r) => r.failed != null || r.kept_up === false || r.all_verified === false || r.batches_failed > 0).length;
+    return h("section", { class: "shape" },
+      h("h3", { id }, shape.name),
+      h("p", { class: "sub" }, shapeLoad(shape) + " " + (trouble ? `${plural(trouble, "run")} of ${int(shape.runs.length)} had a problem, marked in the row.` : `${shape.runs.length === 1 ? "The run" : "All " + int(shape.runs.length) + " runs"} ${isNum(shape.target_batches_per_s) ? "kept up and verified" : "verified"}.`)),
+      h("div", { class: "scroll", tabindex: 0, role: "region", "aria-labelledby": id },
+        h("table", { class: "pipeline" },
+          h("caption", {}, `${shape.name}: one row per option and backing. Each row is a single run.`),
+          h("thead", {}, h("tr", {}, ...cols.map((c, i) => h("th", { scope: "col", class: i >= 2 && i <= 5 ? "n" : null }, c)))),
+          h("tbody", {}, ...shape.runs.map((r) => pipelineRow(r, cols))))));
+  }));
+
+  $("pipeline-columns").hidden = false;
+  const options = p.options || [];
+  $("pipeline-options").hidden = !options.length;
+  $("pipeline-detail").replaceChildren(...options.map((o) => h("details", {},
+    h("summary", {}, o.name),
+    h("dl", {},
+      h("dt", {}, "What it does"), h("dd", {}, o.description ? o.description.replace(/\s*\n\s*/g, " ") : "No description in the result files."),
+      h("dt", {}, "Versions"), h("dd", {}, o.versions && o.versions.length ? h("ul", {}, ...o.versions.map((v) => h("li", {}, v))) : "Not recorded.")))));
+
+  const files = shapes.flatMap((s) => s.runs.map((r) => r.file)), when = (p.ran_at || []).map((t) => t.replace("T", " ").replace(/:\d\d\+00:00$/, ""));
+  $("pipeline-sources").replaceChildren(
+    h("p", {}, `${plural(new Set(files).size, "result file")} in results/pipeline/` + (p.environments && p.environments.length ? `, run on ${p.environments.join("; ")}` : "")
+      + (when.length ? `, started between ${when[0]} and ${when.at(-1)} UTC.` : ".")),
+    ...(p.machines || []).map((mc) => h("p", {}, "Machine: " + Object.entries(mc).map(([k, v]) => `${k} ${typeof v === "object" ? JSON.stringify(v) : v}`).join(", ") + ".")),
+    ...(p.skipped && p.skipped.length ? [h("p", {}, "Skipped: " + p.skipped.map((f) => `${f.file} (${f.reason})`).join("; ") + ".")] : []));
+}
+
 /* ---------- page ---------- */
 
 function render() {
@@ -235,9 +337,9 @@ function render() {
   ceiling.textContent = "Harness ceiling, the rate the load generator reaches against a system that does nothing: at least "
     + `${int(Math.min(...env.harness_ceiling.map((c) => c.commits_per_s)))} commits per second at every writer count.`;
   $("sources").replaceChildren(
-    h("p", {}, `Result files: ${env.files.join(", ")}.` + (env.ran_at.length ? ` Run started (UTC): ${env.ran_at.join(", ")}.` : "")),
+    h("p", {}, `Result files in results/: ${env.files.join(", ")}.` + (env.ran_at.length ? ` Run started (UTC): ${env.ran_at.join(", ")}.` : "")),
     ...env.machines.map((mc) => h("p", {}, "Machine: " + Object.entries(mc).map(([k, v]) => `${k} ${typeof v === "object" ? JSON.stringify(v) : v}`).join(", ") + ".")),
-    data.skipped.length ? h("p", {}, "Skipped: " + data.skipped.map((f) => `${f.file} (${f.reason})`).join("; ") + ".") : null);
+    ...(data.skipped.length ? [h("p", {}, "Skipped: " + data.skipped.map((f) => `${f.file} (${f.reason})`).join("; ") + ".")] : []));
 }
 
 function choose(id, push) {
@@ -256,8 +358,10 @@ async function start() {
     data = await res.json();
   } catch (e) {
     $("status").textContent = `Could not load data.json (${e.message}). Build it with "python -m bench.site" and open this page through a static web server rather than as a file.`;
+    $("pipeline-status").textContent = "Could not load data.json.";
     return;
   }
+  renderPipeline(data.pipeline);
   if (!data.environments || !data.environments.length) {
     $("status").textContent = 'No results yet. Run the benchmark so it writes a file into results/, then run "python -m bench.site".';
     return;
@@ -269,7 +373,7 @@ async function start() {
   $("env").replaceChildren(...order.map((e) => h("option", { value: e.id }, envTitle(e))));
   $("env").addEventListener("change", (e) => choose(e.target.value, true));
   for (const id of ["scaling", "leaderboard", "fairness", "systems"]) $(id).hidden = false;
-  if (data.repository) { $("repo").hidden = false; $("repo").href = "https://github.com/" + data.repository; }
+  if (data.repository) $("repo").href = "https://github.com/" + data.repository;
   current = order[0];
   choose(decodeURIComponent((location.hash.match(/^#env=(.*)$/) || [])[1] || ""), false);
 

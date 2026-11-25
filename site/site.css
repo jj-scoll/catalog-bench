@@ -40,26 +40,37 @@ body {
   font: 16px/1.5 "Avenir Next", Seravek, "Segoe UI Variable Text", "Segoe UI", Ubuntu, Calibri, "DejaVu Sans", system-ui, sans-serif;
   -webkit-text-size-adjust: 100%;
 }
-.masthead, main, footer, .scope { max-width: 66rem; margin: 0 auto; padding-inline: 16px; }
-a { color: var(--link); }
+.masthead, main, footer { max-width: 66rem; margin: 0 auto; padding-inline: 16px; }
+a { color: var(--link); text-underline-offset: .15em; }
+.skip { position: absolute; left: -999rem; }
+.skip:focus { left: 16px; top: 8px; z-index: 10; padding: .4rem .6rem; background: var(--surface); border-radius: 6px; }
 :focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
 code { font-family: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace; font-size: .9em; }
 
 .masthead { padding-top: 2.5rem; padding-bottom: 1.5rem; }
-.wordmark { margin: 0 0 1.25rem; font-weight: 700; color: var(--ink-2); }
+.wordmark { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .25rem 1rem; margin: 0 0 1.25rem; font-weight: 700; color: var(--ink-2); }
+.wordmark a { font-weight: 400; }
 h1 {
   margin: 0;
   max-width: 21em;
-  font-size: clamp(1.7rem, 1rem + 3.4vw, 3.25rem);
-  line-height: 1.08;
+  font-size: clamp(1.75rem, 1.2rem + 2.4vw, 2.75rem);
+  line-height: 1.1;
   font-weight: 800;
   letter-spacing: -.025em;
   text-wrap: balance;
 }
-.lede { max-width: 38em; margin: 1.25rem 0 0; font-size: 1.125rem; color: var(--ink-2); }
+.lede { max-width: 44em; margin: 1rem 0 0; font-size: 1.0625rem; line-height: 1.55; color: var(--ink-2); }
+.masthead nav { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
+.masthead nav a { padding: .3rem .7rem; border: 1px solid var(--axis); border-radius: 999px; background: var(--surface); font-size: .9375rem; text-decoration: none; }
+.masthead nav a:hover { text-decoration: underline; }
+
+.howto { padding: 1rem 1.25rem; background: var(--surface); border: 1px solid var(--hair); border-radius: 8px; }
+.howto h2 { font-size: 1.0625rem; letter-spacing: 0; margin-bottom: .5rem; }
+.howto ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .4rem 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); color: var(--ink-2); font-size: .9375rem; }
+.howto strong { color: var(--ink); }
 
 .scope {
-  position: sticky; top: 0; z-index: 5;
+  position: sticky; top: 0; z-index: 5; margin-top: 1rem;
   display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem;
   padding-block: .625rem;
   background: var(--page);
@@ -83,9 +94,17 @@ h1 {
 }
 .notice strong { font-weight: 700; }
 
-main > section { margin-top: 3rem; }
-h2 { margin: 0 0 .375rem; font-size: 1.5rem; line-height: 1.2; font-weight: 800; letter-spacing: -.015em; }
-h3 { margin: 0 0 .5rem; font-size: 1rem; font-weight: 700; }
+main > section { margin-top: 3.5rem; scroll-margin-top: 1rem; }
+.part { padding-top: 1.75rem; border-top: 2px solid var(--ink); }
+.part section { margin-top: 2.5rem; }
+.eyebrow { margin: 0 0 .25rem; font-size: .8125rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h2 { margin: 0 0 .5rem; font-size: 1.625rem; line-height: 1.2; font-weight: 800; letter-spacing: -.015em; }
+h3 { margin: 0 0 .375rem; font-size: 1.1875rem; line-height: 1.25; font-weight: 700; }
+h4 { margin: 0 0 .5rem; font-size: 1rem; font-weight: 700; }
+.prose h3 { margin-top: 1.5rem; }
+.note { max-width: 46em; margin: 0 0 1rem; padding: .625rem .875rem; background: var(--surface); border-left: 4px solid var(--ink-2); border-radius: 0 6px 6px 0; }
+.sources { margin-top: 1.5rem; color: var(--ink-2); font-size: .875rem; }
+.sources p { margin: 0 0 .35rem; max-width: 60em; overflow-wrap: anywhere; }
 .sub { margin: 0 0 1rem; max-width: 46em; color: var(--ink-2); }
 .empty { margin-top: 3rem; padding: 1.5rem; background: var(--surface); border-radius: 8px; }
 .prose p, .prose ul { max-width: 42em; }
@@ -119,7 +138,7 @@ h3 { margin: 0 0 .5rem; font-size: 1rem; font-weight: 700; }
 .readout b { color: var(--ink); font-weight: 700; font-variant-numeric: tabular-nums; }
 .tableview { margin-top: .75rem; font-size: .9375rem; }
 .tableview summary { cursor: pointer; color: var(--link); width: fit-content; }
-.scroll { overflow-x: auto; margin-top: .5rem; }
+.scroll { overflow-x: auto; margin-top: .5rem; border-radius: 8px; }
 
 /* tables */
 table { border-collapse: collapse; width: 100%; background: var(--surface); border-radius: 8px; font-size: .9375rem; }
@@ -135,6 +154,25 @@ td small { display: block; color: var(--muted); font-size: .8125rem; }
 .mark::before { content: ""; display: inline-block; width: .55rem; height: .55rem; border-radius: 50%; margin-right: .4rem; background: var(--m, var(--axis)); }
 .mark.yes { --m: var(--good); }
 .mark.no { --m: var(--bad); }
+.flag { display: inline-block; padding: 0 .4rem; border: 1.5px solid var(--bad); border-radius: 4px; font-weight: 700; white-space: nowrap; }
+.flag::before { content: "\2715\00a0"; color: var(--bad); }
+
+/* pipeline workload: one wide table per run shape, scrolled sideways on narrow screens */
+table.pipeline { min-width: 60rem; }
+table.pipeline caption { caption-side: bottom; padding: .5rem .75rem; text-align: left; color: var(--muted); font-size: .8125rem; }
+table.pipeline th[scope="row"] { min-width: 11rem; white-space: normal; }
+table.pipeline th[scope="row"] small { display: block; font-weight: 400; color: var(--ink-2); font-size: .8125rem; }
+table.pipeline td:nth-child(2) { min-width: 12.5rem; }
+table.pipeline td:nth-child(2) small { white-space: normal; }
+table.pipeline .big { white-space: nowrap; }
+table.pipeline thead th.n { min-width: 7rem; }
+table.pipeline tr:last-child > th { border-bottom: 0; }
+table.pipeline tr.trouble > * { background: color-mix(in srgb, var(--bad) 7%, transparent); }
+table.pipeline tr.trouble > th { box-shadow: inset 3px 0 var(--bad); }
+.columns { margin: .5rem 0 0; display: grid; grid-template-columns: minmax(7rem, 10rem) 1fr; gap: .5rem 1rem; max-width: 56em; font-size: .9375rem; }
+.columns dt { font-weight: 700; }
+.columns dd { margin: 0; color: var(--ink-2); }
+@media (max-width: 560px) { .columns { grid-template-columns: 1fr; gap: .1rem; } .columns dd { margin-bottom: .6rem; } }
 .meter { display: block; width: 4.5rem; height: 4px; margin: .3rem 0 0 auto; border-radius: 2px; background: var(--hair); overflow: hidden; }
 .meter i { display: block; height: 100%; background: var(--ink-2); border-radius: 2px; }
 
@@ -163,14 +201,15 @@ td small { display: block; color: var(--muted); font-size: .8125rem; }
 .none { color: var(--muted); }
 
 /* per-system detail */
-#detail details { background: var(--surface); border-radius: 8px; margin-bottom: .5rem; }
-#detail summary { cursor: pointer; padding: .7rem 1rem; font-weight: 700; overflow-wrap: anywhere; }
-#detail dl { margin: 0; padding: 0 1rem 1rem; display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr; gap: .5rem 1rem; }
-#detail dt { color: var(--ink-2); }
-#detail dd { margin: 0; min-width: 0; overflow-wrap: anywhere; white-space: pre-line; }
-#detail dd ul { margin: 0; padding-left: 1.1rem; white-space: normal; }
-#detail dd li { margin-bottom: .35rem; }
-@media (max-width: 560px) { #detail dl { grid-template-columns: 1fr; gap: .15rem; } #detail dd { margin-bottom: .6rem; } }
+.detail details { background: var(--surface); border-radius: 8px; margin-bottom: .5rem; }
+.detail summary { cursor: pointer; padding: .7rem 1rem; font-weight: 700; overflow-wrap: anywhere; }
+.detail dl { margin: 0; padding: 0 1rem 1rem; display: grid; grid-template-columns: minmax(6rem, 9rem) 1fr; gap: .5rem 1rem; }
+.detail dt { color: var(--ink-2); }
+.detail dd { margin: 0; min-width: 0; overflow-wrap: anywhere; white-space: pre-line; }
+.detail dd ul { margin: 0; padding-left: 1.1rem; white-space: normal; }
+.detail dd li { margin-bottom: .35rem; }
+@media (max-width: 560px) { .detail dl { grid-template-columns: 1fr; gap: .15rem; } .detail dd { margin-bottom: .6rem; } }
 
 footer { margin-top: 3.5rem; padding-block: 1.25rem 3rem; border-top: 1px solid var(--hair); color: var(--ink-2); font-size: .875rem; }
 footer p { margin: 0 0 .35rem; max-width: 60em; overflow-wrap: anywhere; }
+@media print { .scope { position: static; } .scroll { overflow: visible; } }

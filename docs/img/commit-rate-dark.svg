@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 500" role="img" aria-labelledby="chart-title chart-desc" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+<title id="chart-title">Acknowledged commits per second, by number of writers</title>
+<desc id="chart-desc">Line chart of median acknowledged commits per second against the number of concurrent writers, both on log scales. Postgres (baseline): 8,240 at 1 writer, 81,667 at 64. DuckLake: 189 at 1 writer, 161 at 64. DuckLake, inlining off: 162 at 1 writer, 124 at 64. Iceberg SQL catalog: 7.85 at 1 writer, 5.07 at 64. Lakekeeper: 6.74 at 1 writer, 4.28 at 64. Polaris: 6.46 at 1 writer, 4.08 at 64. S3 Tables, shared table: 1.88 at 1 writer, 1.87 at 64. S3 Tables, table per writer: 1.87 at 1 writer, 49.1 at 64.</desc>
+<text x="16.0" y="28.0" font-size="17" fill="#f0efec" text-anchor="start" font-weight="600">Acknowledged commits per second, by number of writers</text>
+<text x="16.0" y="49.0" font-size="12.5" fill="#c3c2b7" text-anchor="start">Median of three 60-second runs per point. EC2 c6id.4xlarge, Python clients. Both axes are log scales.</text>
+<text x="16.0" y="70.0" font-size="11.5" fill="#c3c2b7" text-anchor="start">commits per second</text>
+<line x1="56" x2="618" y1="452.0" y2="452.0" stroke="#484f58"/>
+<text x="46.0" y="456.0" font-size="11.5" fill="#c3c2b7" text-anchor="end">1</text>
+<line x1="56" x2="618" y1="378.8" y2="378.8" stroke="#262c36"/>
+<text x="46.0" y="382.8" font-size="11.5" fill="#c3c2b7" text-anchor="end">10</text>
+<line x1="56" x2="618" y1="305.6" y2="305.6" stroke="#262c36"/>
+<text x="46.0" y="309.6" font-size="11.5" fill="#c3c2b7" text-anchor="end">100</text>
+<line x1="56" x2="618" y1="232.4" y2="232.4" stroke="#262c36"/>
+<text x="46.0" y="236.4" font-size="11.5" fill="#c3c2b7" text-anchor="end">1K</text>
+<line x1="56" x2="618" y1="159.2" y2="159.2" stroke="#262c36"/>
+<text x="46.0" y="163.2" font-size="11.5" fill="#c3c2b7" text-anchor="end">10K</text>
+<line x1="56" x2="618" y1="86.0" y2="86.0" stroke="#262c36"/>
+<text x="46.0" y="90.0" font-size="11.5" fill="#c3c2b7" text-anchor="end">100K</text>
+<line x1="56.0" x2="56.0" y1="452" y2="457" stroke="#484f58"/>
+<text x="56.0" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">1</text>
+<line x1="149.7" x2="149.7" y1="452" y2="457" stroke="#484f58"/>
+<text x="149.7" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">2</text>
+<line x1="243.3" x2="243.3" y1="452" y2="457" stroke="#484f58"/>
+<text x="243.3" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">4</text>
+<line x1="337.0" x2="337.0" y1="452" y2="457" stroke="#484f58"/>
+<text x="337.0" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">8</text>
+<line x1="430.7" x2="430.7" y1="452" y2="457" stroke="#484f58"/>
+<text x="430.7" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">16</text>
+<line x1="524.3" x2="524.3" y1="452" y2="457" stroke="#484f58"/>
+<text x="524.3" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">32</text>
+<line x1="618.0" x2="618.0" y1="452" y2="457" stroke="#484f58"/>
+<text x="618.0" y="472.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">64</text>
+<text x="337.0" y="492.0" font-size="11.5" fill="#c3c2b7" text-anchor="middle">writers committing at once</text>
+<g><path d="M56.0 165.4 L149.7 146.2 L243.3 131.0 L337.0 120.3 L430.7 107.4 L524.3 98.5 L618.0 92.4" fill="none" stroke="#898781" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 4"/>
+<circle cx="56.0" cy="165.4" r="3" fill="#898781"><title>Postgres (baseline), 1 writers: 8,240 commits/s</title></circle>
+<circle cx="149.7" cy="146.2" r="3" fill="#898781"><title>Postgres (baseline), 2 writers: 15,031 commits/s</title></circle>
+<circle cx="243.3" cy="131.0" r="3" fill="#898781"><title>Postgres (baseline), 4 writers: 24,294 commits/s</title></circle>
+<circle cx="337.0" cy="120.3" r="3" fill="#898781"><title>Postgres (baseline), 8 writers: 34,044 commits/s</title></circle>
+<circle cx="430.7" cy="107.4" r="3" fill="#898781"><title>Postgres (baseline), 16 writers: 51,054 commits/s</title></circle>
+<circle cx="524.3" cy="98.5" r="3" fill="#898781"><title>Postgres (baseline), 32 writers: 67,523 commits/s</title></circle>
+<circle cx="618.0" cy="92.4" r="3" fill="#898781"><title>Postgres (baseline), 64 writers: 81,667 commits/s</title></circle>
+<path d="M624.0 92.4 L640.0 92.4 H652.0" fill="none" stroke="#898781" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="658.0" y="96.4" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">Postgres (baseline)</text></g>
+<g><path d="M56.0 285.3 L149.7 286.3 L243.3 286.5 L337.0 287.0 L430.7 287.3 L524.3 288.8 L618.0 290.5" fill="none" stroke="#3987e5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="285.3" r="3" fill="#3987e5"><title>DuckLake, 1 writers: 189 commits/s</title></circle>
+<circle cx="149.7" cy="286.3" r="3" fill="#3987e5"><title>DuckLake, 2 writers: 184 commits/s</title></circle>
+<circle cx="243.3" cy="286.5" r="3" fill="#3987e5"><title>DuckLake, 4 writers: 182 commits/s</title></circle>
+<circle cx="337.0" cy="287.0" r="3" fill="#3987e5"><title>DuckLake, 8 writers: 180 commits/s</title></circle>
+<circle cx="430.7" cy="287.3" r="3" fill="#3987e5"><title>DuckLake, 16 writers: 178 commits/s</title></circle>
+<circle cx="524.3" cy="288.8" r="3" fill="#3987e5"><title>DuckLake, 32 writers: 170 commits/s</title></circle>
+<circle cx="618.0" cy="290.5" r="3" fill="#3987e5"><title>DuckLake, 64 writers: 161 commits/s</title></circle>
+<path d="M624.0 290.5 L640.0 286.1 H652.0" fill="none" stroke="#3987e5" stroke-width="1.5"/>
+<text x="658.0" y="290.1" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">DuckLake</text></g>
+<g><path d="M56.0 290.3 L149.7 290.7 L243.3 291.7 L337.0 292.6 L430.7 293.9 L524.3 295.6 L618.0 298.7" fill="none" stroke="#d95926" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="290.3" r="3" fill="#d95926"><title>DuckLake, inlining off, 1 writers: 162 commits/s</title></circle>
+<circle cx="149.7" cy="290.7" r="3" fill="#d95926"><title>DuckLake, inlining off, 2 writers: 160 commits/s</title></circle>
+<circle cx="243.3" cy="291.7" r="3" fill="#d95926"><title>DuckLake, inlining off, 4 writers: 155 commits/s</title></circle>
+<circle cx="337.0" cy="292.6" r="3" fill="#d95926"><title>DuckLake, inlining off, 8 writers: 151 commits/s</title></circle>
+<circle cx="430.7" cy="293.9" r="3" fill="#d95926"><title>DuckLake, inlining off, 16 writers: 145 commits/s</title></circle>
+<circle cx="524.3" cy="295.6" r="3" fill="#d95926"><title>DuckLake, inlining off, 32 writers: 137 commits/s</title></circle>
+<circle cx="618.0" cy="298.7" r="3" fill="#d95926"><title>DuckLake, inlining off, 64 writers: 124 commits/s</title></circle>
+<path d="M624.0 298.7 L640.0 303.1 H652.0" fill="none" stroke="#d95926" stroke-width="1.5"/>
+<text x="658.0" y="307.1" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">DuckLake, inlining off</text></g>
+<g><path d="M56.0 386.5 L149.7 386.5 L243.3 386.4 L337.0 386.0 L430.7 386.4 L524.3 390.2 L618.0 400.4" fill="none" stroke="#199e70" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="386.5" r="3" fill="#199e70"><title>Iceberg SQL catalog, 1 writers: 7.85 commits/s</title></circle>
+<circle cx="149.7" cy="386.5" r="3" fill="#199e70"><title>Iceberg SQL catalog, 2 writers: 7.84 commits/s</title></circle>
+<circle cx="243.3" cy="386.4" r="3" fill="#199e70"><title>Iceberg SQL catalog, 4 writers: 7.86 commits/s</title></circle>
+<circle cx="337.0" cy="386.0" r="3" fill="#199e70"><title>Iceberg SQL catalog, 8 writers: 7.96 commits/s</title></circle>
+<circle cx="430.7" cy="386.4" r="3" fill="#199e70"><title>Iceberg SQL catalog, 16 writers: 7.87 commits/s</title></circle>
+<circle cx="524.3" cy="390.2" r="3" fill="#199e70"><title>Iceberg SQL catalog, 32 writers: 6.99 commits/s</title></circle>
+<circle cx="618.0" cy="400.4" r="3" fill="#199e70"><title>Iceberg SQL catalog, 64 writers: 5.07 commits/s</title></circle>
+<path d="M624.0 400.4 L640.0 385.9 H652.0" fill="none" stroke="#199e70" stroke-width="1.5"/>
+<text x="658.0" y="389.9" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">Iceberg SQL catalog</text></g>
+<g><path d="M56.0 391.3 L149.7 391.7 L243.3 391.6 L337.0 391.9 L430.7 392.3 L524.3 396.9 L618.0 405.8" fill="none" stroke="#c98500" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="391.3" r="3" fill="#c98500"><title>Lakekeeper, 1 writers: 6.74 commits/s</title></circle>
+<circle cx="149.7" cy="391.7" r="3" fill="#c98500"><title>Lakekeeper, 2 writers: 6.66 commits/s</title></circle>
+<circle cx="243.3" cy="391.6" r="3" fill="#c98500"><title>Lakekeeper, 4 writers: 6.68 commits/s</title></circle>
+<circle cx="337.0" cy="391.9" r="3" fill="#c98500"><title>Lakekeeper, 8 writers: 6.63 commits/s</title></circle>
+<circle cx="430.7" cy="392.3" r="3" fill="#c98500"><title>Lakekeeper, 16 writers: 6.55 commits/s</title></circle>
+<circle cx="524.3" cy="396.9" r="3" fill="#c98500"><title>Lakekeeper, 32 writers: 5.66 commits/s</title></circle>
+<circle cx="618.0" cy="405.8" r="3" fill="#c98500"><title>Lakekeeper, 64 writers: 4.28 commits/s</title></circle>
+<path d="M624.0 405.8 L640.0 402.9 H652.0" fill="none" stroke="#c98500" stroke-width="1.5"/>
+<text x="658.0" y="406.9" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">Lakekeeper</text></g>
+<g><path d="M56.0 392.7 L149.7 392.7 L243.3 392.6 L337.0 393.0 L430.7 393.5 L524.3 398.5 L618.0 407.3" fill="none" stroke="#d55181" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="392.7" r="3" fill="#d55181"><title>Polaris, 1 writers: 6.46 commits/s</title></circle>
+<circle cx="149.7" cy="392.7" r="3" fill="#d55181"><title>Polaris, 2 writers: 6.45 commits/s</title></circle>
+<circle cx="243.3" cy="392.6" r="3" fill="#d55181"><title>Polaris, 4 writers: 6.47 commits/s</title></circle>
+<circle cx="337.0" cy="393.0" r="3" fill="#d55181"><title>Polaris, 8 writers: 6.40 commits/s</title></circle>
+<circle cx="430.7" cy="393.5" r="3" fill="#d55181"><title>Polaris, 16 writers: 6.29 commits/s</title></circle>
+<circle cx="524.3" cy="398.5" r="3" fill="#d55181"><title>Polaris, 32 writers: 5.38 commits/s</title></circle>
+<circle cx="618.0" cy="407.3" r="3" fill="#d55181"><title>Polaris, 64 writers: 4.08 commits/s</title></circle>
+<path d="M624.0 407.3 L640.0 419.9 H652.0" fill="none" stroke="#d55181" stroke-width="1.5"/>
+<text x="658.0" y="423.9" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">Polaris</text></g>
+<g><path d="M56.0 431.9 L149.7 432.1 L243.3 432.5 L337.0 430.2 L430.7 428.1 L524.3 425.5 L618.0 432.1" fill="none" stroke="#0ca30c" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="431.9" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 1 writers: 1.88 commits/s</title></circle>
+<circle cx="149.7" cy="432.1" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 2 writers: 1.87 commits/s</title></circle>
+<circle cx="243.3" cy="432.5" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 4 writers: 1.85 commits/s</title></circle>
+<circle cx="337.0" cy="430.2" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 8 writers: 1.99 commits/s</title></circle>
+<circle cx="430.7" cy="428.1" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 16 writers: 2.12 commits/s</title></circle>
+<circle cx="524.3" cy="425.5" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 32 writers: 2.30 commits/s</title></circle>
+<circle cx="618.0" cy="432.1" r="3" fill="#0ca30c"><title>S3 Tables, shared table, 64 writers: 1.87 commits/s</title></circle>
+<path d="M624.0 432.1 L640.0 436.9 H652.0" fill="none" stroke="#0ca30c" stroke-width="1.5"/>
+<text x="658.0" y="440.9" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">S3 Tables, shared table</text></g>
+<g><path d="M56.0 432.0 L243.3 387.2 L430.7 344.2 L618.0 328.2" fill="none" stroke="#9085e9" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="56.0" cy="432.0" r="3" fill="#9085e9"><title>S3 Tables, table per writer, 1 writers: 1.87 commits/s</title></circle>
+<circle cx="243.3" cy="387.2" r="3" fill="#9085e9"><title>S3 Tables, table per writer, 4 writers: 7.67 commits/s</title></circle>
+<circle cx="430.7" cy="344.2" r="3" fill="#9085e9"><title>S3 Tables, table per writer, 16 writers: 29.7 commits/s</title></circle>
+<circle cx="618.0" cy="328.2" r="3" fill="#9085e9"><title>S3 Tables, table per writer, 64 writers: 49.1 commits/s</title></circle>
+<path d="M624.0 328.2 L640.0 328.2 H652.0" fill="none" stroke="#9085e9" stroke-width="1.5"/>
+<text x="658.0" y="332.2" font-size="12" fill="#f0efec" text-anchor="start" class="series-label">S3 Tables, table per writer</text></g>
+</svg>

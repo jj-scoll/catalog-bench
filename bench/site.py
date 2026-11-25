@@ -1,8 +1,11 @@
-"""Usage: python -m bench.site  (reads results/*.json, writes site/data.json)
+"""Usage: python -m bench.site  (reads results/*.json and results/pipeline/*.json, writes site/data.json)
 
 Runs are grouped by environment label and run length, then by system (plus client and
 tables-per-writer where a result states them) and writer count. Runs that share all of
 those are repetitions. Unknown keys are ignored and missing ones become null.
+
+Pipeline workload files (results/pipeline/ec2-<option>-<backing>-<shape>.json) are kept apart under "pipeline": one
+row per run, grouped by run shape. The backing and the shape are only in the file name.
 """
 
 import argparse
@@ -15,6 +18,25 @@ from statistics import median
 
 MIN_SECONDS, MIN_REPS = 30, 2  # anything less is shown, but labelled as not comparable
 VARIANTS = {"client": "client: {}", "tables_per_writer": "tables per writer: {}"}
+
+
+BACKINGS = {
+    "aurora-prov": "Aurora PostgreSQL, provisioned", "aurora-sv2": "Aurora Serverless v2", "s3tables": "Amazon S3 Tables",
+    "sql": "Iceberg SQL catalog on Postgres", "lakekeeper": "Lakekeeper", "polaris": "Polaris",
+    "local-postgres": "Postgres on the runner", "files-s3": "plain Parquet on S3",
+}
+SHAPES = {  # in page order: name, then traces, batches per trace and batches per second asked for when a file does not say
+    "rate": ("Steady rate", 6, 300, 1.25), "burst": ("Burst", 6, 1500, 12.5), "ceiling": ("Ceiling", 4, 500, None),
+    "big": ("One big trace", 1, 9000, None), "rate-small": ("Steady rate, smaller load", 3, 300, 1.25),
+    "half-rate": ("Half rate", 3, 200, 0.63), "ceiling-small": ("Ceiling, smaller load", 2, 150, None),
+}
+BEHIND_LIMIT_MS = 1000  # a paced run whose latest batch started later than this fell behind
+PIPELINE_KEYS = (
+    "traces", "batches_per_trace", "rows_per_batch", "workers", "target_batches_per_s", "batches_per_s", "behind_max_ms",
+    "commit_p50_ms", "commit_p95_ms", "finalize_max_ms", "finalize_retries", "read_trace_p50_ms",
+    "read_trace_after_maintain_p50_ms", "maintain_seconds", "redelivered", "write_errors", "batches_failed",
+    "rows_missing", "rows_duplicated", "rows_stale",
+)
 
 
 def _num(value):
@@ -78,6 +100,75 @@ def _system(name, runs, docs):
     }
 
 
+def _suffix(stem, known):
+    return max((k for k in known if stem.endswith("-" + k)), key=len, default=None)
+
+
+def _pipeline_run(path, doc, r):
+    stem, option = path.stem, r["option"]
+    shape = _suffix(stem, SHAPES) or stem.rpartition("-")[2]
+    rest = stem.removesuffix(shape).rstrip("-")
+    backing = _suffix(rest, BACKINGS) or rest.partition("-")[2].removeprefix(option).strip("-") or rest
+    run = {"file": path.name, "option": option, "backing": backing, "backing_label": BACKINGS.get(backing, backing),
+           "shape": shape, **{k: _num(r.get(k)) for k in PIPELINE_KEYS}}
+    for k in ("verified", "reprocess_verified", "verified_after_maintain"):
+        run[k] = r[k] if isinstance(r.get(k), bool) else None
+    run["failed"] = str(r["failed"]) if "failed" in r else None
+
+    target, late, achieved = run["target_batches_per_s"], run["behind_max_ms"], run["batches_per_s"]
+    if not target:
+        run["kept_up"] = None
+    elif late is not None:
+        run["kept_up"] = late <= BEHIND_LIMIT_MS
+    else:
+        run["kept_up"] = achieved >= 0.95 * target if achieved is not None else None
+
+    bad = any(run[k] for k in ("rows_missing", "rows_duplicated", "rows_stale")) or False in (run["verified"], run["reprocess_verified"], run["verified_after_maintain"])
+    run["all_verified"] = False if bad else True if run["verified"] and run["reprocess_verified"] else None
+    return run
+
+
+def build_pipeline(directory):
+    runs, skipped, docs, stated = [], [], [], {}
+    for path in sorted(Path(directory).glob("*.json")):
+        try:
+            doc = json.loads(path.read_text())
+        except ValueError as e:
+            skipped.append({"file": path.name, "reason": f"not valid JSON: {e}"})
+            continue
+        if not isinstance(doc, dict) or not isinstance(doc.get("results"), list):
+            skipped.append({"file": path.name, "reason": "no list of results"})
+            continue
+        docs.append(doc)
+        for r in doc["results"]:
+            if not (isinstance(r, dict) and isinstance(r.get("option"), str)):
+                continue
+            runs.append(_pipeline_run(path, doc, r))
+            option = stated.setdefault(r["option"], {"descriptions": {}, "versions": {}})
+            for key, found in option.items():
+                if isinstance(doc.get(key), dict) and isinstance(text := doc[key].get(r["option"]), str):
+                    found[text.strip()] = None
+
+    shapes = []
+    for shape in [*SHAPES, *sorted({r["shape"] for r in runs} - set(SHAPES))]:
+        mine = sorted((r for r in runs if r["shape"] == shape), key=lambda r: (r["option"], r["backing"]))
+        if not mine:
+            continue
+        name, *load = SHAPES.get(shape, (shape, None, None, None))
+        said = Counter((r["traces"], r["batches_per_trace"], r["target_batches_per_s"]) for r in mine if r["traces"] and r["batches_per_trace"])
+        traces, batches, target = said.most_common(1)[0][0] if said else load
+        shapes.append({"id": shape, "name": name, "traces": traces, "batches_per_trace": batches, "target_batches_per_s": target, "runs": mine})
+    return {
+        "behind_limit_ms": BEHIND_LIMIT_MS,
+        "shapes": shapes,
+        "options": [{"name": n, "description": "; ".join(o["descriptions"]) or None, "versions": list(o["versions"])} for n, o in sorted(stated.items())],
+        "environments": sorted({d["environment"] for d in docs if isinstance(d.get("environment"), str)}),
+        "ran_at": sorted({d["ran_at"] for d in docs if isinstance(d.get("ran_at"), str)}),
+        "machines": list({json.dumps(d["machine"], sort_keys=True): d["machine"] for d in docs if isinstance(d.get("machine"), dict)}.values()),
+        "skipped": skipped,
+    }
+
+
 def build(results_dir):
     groups, skipped = {}, []  # (environment label, run length) -> {"docs": [...], "runs": {series name: [...]}}
     for path in sorted(Path(results_dir).glob("*.json")):
@@ -130,7 +221,8 @@ def build(results_dir):
             "harness_ceiling": [{"writers": w, "commits_per_s": median(v)} for w, v in sorted(ceiling.items())],
             "systems": systems,
         })
-    return {"repository": os.environ.get("GITHUB_REPOSITORY"), "environments": environments, "skipped": skipped}
+    return {"repository": os.environ.get("GITHUB_REPOSITORY"), "environments": environments, "skipped": skipped,
+            "pipeline": build_pipeline(Path(results_dir) / "pipeline")}
 
 
 def main(argv=None):
@@ -145,7 +237,9 @@ def main(argv=None):
     for env in data["environments"]:
         print(f"{env['label']} ({env['target_seconds']} s x {env['reps']}): {len(env['systems'])} systems, "
               f"{'comparable' if env['comparable'] else 'not comparable'}")
-    for s in data["skipped"]:
+    for shape in data["pipeline"]["shapes"]:
+        print(f"pipeline, {shape['name']} ({shape['id']}): {len(shape['runs'])} runs")
+    for s in data["skipped"] + [{**s, "file": "pipeline/" + s["file"]} for s in data["pipeline"]["skipped"]]:
         print(f"skipped {s['file']}: {s['reason']}")
     print(f"wrote {out} ({out.stat().st_size} bytes)")
 

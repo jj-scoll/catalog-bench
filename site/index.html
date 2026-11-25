@@ -3,64 +3,130 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>catalog-bench: commits per second into lakehouse catalogs</title>
-<meta name="description" content="An open benchmark of single-row commits per second into lakehouse catalogs from concurrent writers.">
+<title>catalog-bench: lakehouse catalogs under concurrent writes</title>
+<meta name="description" content="An open benchmark of lakehouse catalogs under concurrent writers: a commit-rate ramp and a pipeline workload, rebuilt from the result files in the repository.">
 <link rel="stylesheet" href="site.css">
 </head>
 <body>
+<a class="skip" href="#main">Skip to results</a>
 <header class="masthead">
-  <p class="wordmark">catalog-bench</p>
-  <h1>How many commits per second does a lakehouse catalog accept, and what happens to writers when several commit at once?</h1>
-  <p class="lede">An open benchmark: one small file per system, one results format, and every number here rebuilt from the result files in the repository.</p>
+  <p class="wordmark">catalog-bench <a href="https://github.com/jj-scoll/catalog-bench">GitHub repository</a></p>
+  <h1>Lakehouse catalogs under concurrent writes</h1>
+  <p class="lede">A lakehouse catalog is the service that records which data files make up a table, so every write ends with a commit to it. This open benchmark measures what happens when several writers commit at once, with two workloads: a <a href="#ramp">commit-rate ramp</a> that finds how many tiny commits per second each catalog accepts as writers are added, and a <a href="#pipeline">pipeline workload</a> that pushes a batch load through each option and checks every row afterwards. Every number on this page is rebuilt from the result files in the repository.</p>
+  <nav aria-label="On this page">
+    <a href="#ramp">Commit-rate ramp</a>
+    <a href="#pipeline">Pipeline workload</a>
+    <a href="#method">Method</a>
+    <a href="#add">Add your catalog</a>
+  </nav>
 </header>
 
-<div class="scope" id="scope">
-  <label for="env">Environment</label>
-  <select id="env"></select>
-  <p class="notice" id="notice" hidden></p>
-</div>
-
 <main id="main">
-  <p class="empty" id="status">Loading results.</p>
+  <aside class="howto" aria-labelledby="howto-title">
+    <h2 id="howto-title">How to read this</h2>
+    <ul>
+      <li><strong>Compare within one table.</strong> Each environment and each run shape has its own table, because numbers from different machines or different loads do not line up.</li>
+      <li><strong>Check how many runs are behind a number.</strong> The commit-rate ramp shows the median of its repetitions with the lowest and highest beside it. Every pipeline row is a single run, so treat small differences there as noise.</li>
+      <li><strong>Times</strong> are in milliseconds (ms) below one second and in seconds (s) above. A median is the middle value; p95 is the value 95 in 100 were faster than.</li>
+      <li><strong>Problems are written out.</strong> A run that fell behind, lost a batch or did not verify says so in words, not only in colour.</li>
+    </ul>
+  </aside>
 
-  <section id="scaling" hidden>
-    <h2>Commits per second as writers are added</h2>
-    <p class="sub" id="scaling-sub"></p>
-    <div class="legend" id="legend"></div>
-    <div class="chart" id="chart"></div>
-    <ul class="readout" id="scaling-readout"></ul>
-    <details class="tableview">
-      <summary>Show these numbers as a table</summary>
-      <div class="scroll" id="scaling-table"></div>
-    </details>
+  <section class="part" id="ramp">
+    <p class="eyebrow">Workload 1</p>
+    <h2>Commit-rate ramp</h2>
+    <p class="sub">Writers commit one single-row insert at a time, as fast as the system acknowledges them, while the number of writers goes up. It answers: how many commits per second does the catalog accept, and do all writers get a turn?</p>
+
+    <div class="scope" id="scope">
+      <label for="env">Environment</label>
+      <select id="env"></select>
+      <p class="notice" id="notice" hidden></p>
+    </div>
+
+    <p class="empty" id="status">Loading results.</p>
+
+    <section id="scaling" hidden>
+      <h3>Commits per second as writers are added</h3>
+      <p class="sub" id="scaling-sub"></p>
+      <div class="legend" id="legend"></div>
+      <div class="chart" id="chart"></div>
+      <ul class="readout" id="scaling-readout"></ul>
+      <details class="tableview">
+        <summary>Show these numbers as a table</summary>
+        <div class="scroll" id="scaling-table" tabindex="0" role="region" aria-label="Commits per second by writer count"></div>
+      </details>
+    </section>
+
+    <section id="leaderboard" hidden>
+      <h3>Leaderboard for this environment</h3>
+      <p class="sub">Peak is the median commits per second across repetitions at the writer count where that median is highest. The other columns describe the same writer count. Catalog call share is the part of the median commit time spent in the catalog call, for systems that report it; the rest is spent in the client. Verified means every acknowledged commit was found afterwards, in every run.</p>
+      <div id="board"></div>
+    </section>
+
+    <section id="fairness" hidden>
+      <h3>Do all writers get a turn?</h3>
+      <p class="sub">Each bar runs from the writer that got the fewest commits to the one that got the most, on a scale from zero to the most. A short bar at the right end means the writers shared evenly; a long bar means some were starved. Compare the slowest commit with the median beside it.</p>
+      <p class="callout" id="fairness-callout" hidden></p>
+      <div class="fair-grid" id="fair"></div>
+    </section>
+
+    <section id="systems" hidden>
+      <h3>What each entry measures</h3>
+      <div class="detail" id="detail"></div>
+    </section>
+
+    <div class="sources" id="sources"></div>
   </section>
 
-  <section id="leaderboard" hidden>
-    <h2>Leaderboard for this environment</h2>
-    <p class="sub">Peak is the median commits per second across repetitions at the writer count where that median is highest. The other columns describe the same writer count. Catalog call share is the part of the median commit time spent in the catalog call, for systems that report it; the rest is spent in the client. Verified means every acknowledged commit was found afterwards, in every run.</p>
-    <div id="board"></div>
-  </section>
+  <section class="part" id="pipeline">
+    <p class="eyebrow">Workload 2</p>
+    <h2>Pipeline workload</h2>
+    <p class="sub">A load arrives as traces, and each trace is split into batches of rows. Workers write the batches, one at a time each. When all of a trace's batches are in, a finaliser closes the trace, and a reader then loads the whole trace back. Some batches are delivered twice on purpose, and a write that fails is delivered again. Afterwards one trace is reprocessed under a new version that must replace the old rows, and every trace is read back and compared row by row with what was acknowledged.</p>
+    <p class="note single"><strong>Each row is a single run.</strong> Nothing here was repeated, so there is no spread to judge noise by. Read a large gap as a finding and a small one as nothing.</p>
+    <p class="note"><strong>Batch data did not go to the same place in every row.</strong> Rows backed by S3, Aurora or Amazon S3 Tables wrote batch data to S3. Rows backed by something on the runner (local Postgres, the Iceberg SQL catalog, Lakekeeper, Polaris) wrote it to the runner's local NVMe disk, so their batch writes of a few milliseconds are disk writes and are not comparable with the S3 rows. Aurora was one provisioned db.r8g.xlarge instance and one Serverless v2 cluster set to 0.5 to 16 ACU, both PostgreSQL 16.8.</p>
 
-  <section id="fairness" hidden>
-    <h2>Do all writers get a turn?</h2>
-    <p class="sub">Each bar runs from the writer that got the fewest commits to the one that got the most, on a scale from zero to the most. A short bar at the right end means the writers shared evenly; a long bar means some were starved. Compare the slowest commit with the median beside it.</p>
-    <p class="callout" id="fairness-callout" hidden></p>
-    <div class="fair-grid" id="fair"></div>
-  </section>
+    <p class="empty" id="pipeline-status">Loading results.</p>
+    <div id="pipeline-shapes"></div>
 
-  <section id="systems" hidden>
-    <h2>What each entry measures</h2>
-    <div id="detail"></div>
+    <section id="pipeline-columns" hidden>
+      <h3>What the columns mean</h3>
+      <dl class="columns">
+        <dt>Kept up</dt>
+        <dd>For a paced run, batches are scheduled at a fixed rate. The run kept up if no batch started more than <span id="behind-limit">one second</span> after its scheduled time. The rate achieved counts every acknowledged write, including the deliberate repeat deliveries, over the whole load including closing the traces, so it can sit a little above or below the rate asked for. An unpaced run has no schedule: its rate is simply how fast the option went.</dd>
+        <dt>Batch write</dt>
+        <dd>Time for one batch to be durable and acknowledged: the median, then p95. Options that commit once per trace only write files here; their commit cost shows up under "Close a trace".</dd>
+        <dt>Close a trace</dt>
+        <dd>The slowest finalise call in the run, including replacing an older version of the trace. Retries are the finaliser's own, after a conflict with a concurrent write.</dd>
+        <dt>Read one trace</dt>
+        <dd>Median time for a reader to load every current row of one trace. Where the option runs maintenance (compaction), the time after it is shown too.</dd>
+        <dt>Failed writes</dt>
+        <dd>Write attempts that raised an error. Each is delivered again, up to three deliveries in all. A batch that never got written is called out.</dd>
+        <dt>Verified</dt>
+        <dd>No rows missing, duplicated or left over from an old version, and the reprocessed trace verified as well.</dd>
+      </dl>
+    </section>
+
+    <section id="pipeline-options" hidden>
+      <h3>What each option does</h3>
+      <div class="detail" id="pipeline-detail"></div>
+    </section>
+
+    <div class="sources" id="pipeline-sources"></div>
   </section>
 
   <section id="method" class="prose">
     <h2>Method</h2>
+    <h3>Commit-rate ramp</h3>
     <p>N writer processes each open their own connection and commit one single-row insert at a time, as fast as the system acknowledges them, for a fixed period. A commit counts only when the client was told it succeeded.</p>
     <p>A run is marked verified when the rows found afterwards equal the acknowledged commits, allowing for failed commits that landed anyway.</p>
-    <p>Single-row commits are the worst case for a catalog on purpose: they isolate commit cost from data volume. Batched and multi-table workloads are planned.</p>
+    <p>Single-row commits are the worst case for a catalog on purpose: they isolate commit cost from data volume.</p>
     <p>Results from a workstation or a shared CI runner are noisy. Compare systems within one run on one machine, not across machines. That is why each environment here has its own ranking, and why runs shorter than 30 seconds or with a single repetition are labelled as not comparable.</p>
-    <p>The Python client's cost is negligible for the systems measured so far (checked against <code>pgbench</code> for Postgres). That has not been checked for Iceberg clients.</p>
+    <p>The Python client's cost is negligible for raw Postgres (checked against <code>pgbench</code>). For the Iceberg systems the Python client (pyiceberg) and its object writes are most of each commit, so those rows measure the client as much as the catalog.</p>
     <p id="ceiling" hidden></p>
+    <h3>Pipeline workload</h3>
+    <p>Worker processes take batches from a queue and write one at a time. Paced runs schedule batches at a fixed rate whether or not earlier ones have finished, so a slow option falls behind instead of slowing the load down. Unpaced runs hand every batch over at once.</p>
+    <p>Delivery is at least once: a failed write is delivered again, up to three times in all, and some batches are delivered twice even though the first delivery succeeded. An option has to cope with both without leaving duplicate rows.</p>
+    <p>The same option can run against different backings, and the load comes in several shapes. Each table above holds one shape, so its rows faced the same load.</p>
   </section>
 
   <section id="add" class="prose">
@@ -71,11 +137,13 @@
       <li><code>commit_one</code> must not return until the commit is durable by the system's own definition, and must raise if it failed. No client-side batching or retries beyond what the client library does by default.</li>
       <li>State what the client is. For systems where the client does real work per commit, the client is part of the result.</li>
     </ul>
-    <p>The results format is the contract: a driver written in any language can produce it for the same workload. The full interface is in the README under "Add a system". <a id="repo" hidden>Open the repository</a></p>
+    <p>The results format is the contract: a driver written in any language can produce it for the same workload. The full interface is in <code>docs/adding-a-system.md</code> in the repository. <a id="repo" href="https://github.com/jj-scoll/catalog-bench">Open the repository on GitHub</a></p>
   </section>
 </main>
 
-<footer id="sources"></footer>
+<footer>
+  <p>catalog-bench is open source. Code, result files and the generator for this page are in the <a href="https://github.com/jj-scoll/catalog-bench">GitHub repository</a>.</p>
+</footer>
 <script src="site.js"></script>
 </body>
 </html>

@@ -146,7 +146,8 @@ def test_an_open_loop_run_keeps_to_its_rate_and_reports_how_far_behind_it_fell(t
 def test_time_until_a_batch_is_readable_is_measured(tmp_path):
     r = run(files(tmp_path, _Slow), traces=1, batches=4, rows=20, workers=1, rate=2)
     assert r["fresh_samples"] > 0
-    assert r["visible_after_p50_ms"] >= 300
+    # _Slow counts its 0.3 s from the file's mtime, which is a few ms before the acknowledgement the harness counts from
+    assert r["visible_after_p50_ms"] >= 250
 
 
 def test_every_registered_option_says_what_it_measures_and_has_the_interface():
