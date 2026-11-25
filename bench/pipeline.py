@@ -89,7 +89,12 @@ def _next(done, procs):
 
 def _prober(option, probes, out, rows, timeout):
     """Reads each sampled batch from a connection of its own until it is all there."""
-    conn = option.connect()
+    try:
+        conn = option.connect()
+    except Exception as e:
+        out.put(("failed", f"{type(e).__name__}: {e}"))
+        return
+    out.put(("ready",))
     visible, reads, skipped, timeouts = [], [], 0, 0
     while (probe := probes.get()) is not None:
         trace, version, batch, acked = probe
@@ -120,11 +125,12 @@ def _load(option, plan, *, rows, workers, rate, redeliver_every, probe_every, pr
     jobs, done, probes, probed = ctx.Queue(), ctx.Queue(), ctx.Queue(), ctx.Queue()
     go, base = ctx.Event(), ctx.Value("d", 0.0)
     procs = [ctx.Process(target=_worker, args=(option, jobs, done, probes, go, base, rows, probe_every)) for _ in range(workers)]
-    prober = ctx.Process(target=_prober, args=(option, probes, probed, rows, probe_timeout))
+    prober = ctx.Process(target=_prober, name="prober", args=(option, probes, probed, rows, probe_timeout))
     for p in procs + [prober]:
         p.start()
-    for _ in procs:
-        if (message := _next(done, procs))[0] == "failed":
+    # The reader must be connected too: a short load would otherwise end before it could take a sample.
+    for queue_, waited in [(done, procs)] * workers + [(probed, [prober])]:
+        if (message := _next(queue_, waited))[0] == "failed":
             for p in procs + [prober]:
                 p.kill()
             raise RuntimeError(f"{option.name}: worker failed to start: {message[1]}")

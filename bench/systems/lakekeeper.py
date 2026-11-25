@@ -1,4 +1,5 @@
 import json
+import time
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
@@ -7,7 +8,6 @@ import pyarrow as pa
 import pyarrow.fs as pafs
 import pyiceberg
 from pyiceberg.catalog import load_catalog
-from pyiceberg.exceptions import NoSuchNamespaceError, NoSuchTableError
 
 from bench.config import (
     LAKEKEEPER_URL,
@@ -37,12 +37,12 @@ def http(method, url, body=None, headers=None, missing_ok=False):
 
 
 def drop_table(catalog):
-    """Remove the benchmark table and namespace from a catalog, whichever of them exist."""
-    for drop, target in ((catalog.drop_table, TABLE), (catalog.drop_namespace, "bench")):
-        try:
-            drop(target)
-        except (NoSuchTableError, NoSuchNamespaceError):
-            pass
+    """Remove every table and namespace from a catalog: the pipeline options leave their own beside the benchmark's,
+    and a warehouse that still holds any cannot be deleted."""
+    for namespace in catalog.list_namespaces():
+        for table in catalog.list_tables(namespace):
+            catalog.drop_table(table)
+        catalog.drop_namespace(namespace)
 
 
 def empty_warehouse(prefix):
@@ -52,7 +52,13 @@ def empty_warehouse(prefix):
         allow_bucket_creation=True,
     )  # fmt: skip
     s3.create_dir(S3_BUCKET)
-    s3.delete_dir_contents(f"{S3_BUCKET}/{prefix}", missing_dir_ok=True)
+    for attempt in range(10):  # RustFS answers a large delete after a busy run with "service unavailable, please retry"
+        try:
+            return s3.delete_dir_contents(f"{S3_BUCKET}/{prefix}", missing_dir_ok=True)
+        except OSError:
+            if attempt == 9:
+                raise
+            time.sleep(3)
 
 
 def object_store_version():

@@ -1,7 +1,10 @@
 """The pipeline workload, driven with the plain-files option on a temporary directory, and with deliberately
 broken variants of it to show that verification catches lost, duplicated and stale rows."""
 
+import multiprocessing as mp
+import os
 import time
+import urllib.request
 from dataclasses import dataclass
 
 import psycopg
@@ -9,7 +12,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from bench.config import PG
+from bench.config import LAKEKEEPER_URL, PG
 from bench.options import OPTIONS
 from bench.options.files import Option as Files
 from bench.pipeline import run
@@ -100,6 +103,23 @@ def test_a_clean_run_commits_every_batch_and_reads_back_exactly_what_was_written
     assert r["fresh_samples"] > 0 and r["fresh_timeouts"] == 0
 
 
+@dataclass
+class SlowReader(Files):
+    def connect(self):
+        if mp.current_process().name == "prober":  # connects 0.2 s after the first write, or after 2 s without one
+            deadline = time.monotonic() + 2
+            while not os.path.exists(f"{self.data}/output") and time.monotonic() < deadline:
+                time.sleep(0.01)
+            time.sleep(0.2)
+        return super().connect()
+
+
+def test_the_load_waits_for_the_freshness_reader_to_connect(tmp_path):
+    # This happened: a 10 ms load was over before the reader had connected, so every sample was too old to count.
+    r = run(SlowReader(data=str(tmp_path / "data")), **SMALL)
+    assert r["fresh_samples"] > r["fresh_skipped"]
+
+
 def test_a_redelivered_batch_is_counted_and_does_not_break_an_option_that_overwrites(tmp_path):
     r = run(files(tmp_path), **SMALL, redeliver_every=3)
     assert r["redelivered"] == 4
@@ -171,14 +191,19 @@ def test_every_registered_option_says_what_it_measures_and_has_the_interface():
 
 @pytest.mark.parametrize("name", [
     "ducklake", "iceberg-per-batch", "iceberg-per-trace", "vortex", "delta-per-batch", "delta-per-trace", "lance-per-batch",
-    "lance-per-trace",
+    "lance-per-trace", "iceberg-duckdb-per-batch", "iceberg-duckdb-per-trace",
 ])
 def test_each_option_passes_the_whole_flow_locally(name, tmp_path):
-    if name == "ducklake":  # the only option that cannot run without a service: its catalog is the Postgres in compose.yaml
+    if name == "ducklake":  # cannot run without a service: its catalog is the Postgres in compose.yaml
         try:
             psycopg.connect(f"{PG} dbname=postgres", connect_timeout=2).close()
         except psycopg.OperationalError:
             pytest.skip("Postgres is not running")
+    if name.startswith("iceberg-duckdb"):  # DuckDB writes Iceberg only through a REST catalog: Lakekeeper in compose.yaml
+        try:
+            urllib.request.urlopen(f"{LAKEKEEPER_URL}/management/v1/info", timeout=2).close()
+        except OSError:
+            pytest.skip("Lakekeeper is not running")
     option = OPTIONS[name].local(tmp_path)
     r = run(option, **SMALL, redeliver_every=4)
     assert r["batches_failed"] == 0
