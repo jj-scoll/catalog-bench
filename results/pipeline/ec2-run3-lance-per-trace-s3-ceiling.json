@@ -1,0 +1,67 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T10:39:04+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "lance-per-trace": "lance 14.0.3, read with duckdb 2.0.1, pyarrow 26.0.1; data under s3"
+ },
+ "descriptions": {
+  "lance-per-trace": "Lance datasets, one append per trace, with no catalog: each dataset's manifests are in the data directory.\nEach batch is written as plain Parquet files outside the dataset, at a key fixed by trace, version and batch, so a\nsecond delivery overwrites the first; a reader that wants a fresh batch reads that file. Closing a trace reads its\nfiles back, appends them to the output dataset in one commit and deletes the trace's older versions in a second,\nthen does the same for the errors dataset. Whole-trace readers use DuckDB's lance extension and take the highest\nversion present. The files are kept. Maintenance compacts the two datasets."
+ },
+ "results": [
+  {
+   "option": "lance-per-trace",
+   "traces": 4,
+   "batches_per_trace": 500,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": null,
+   "redelivered": 40,
+   "load_seconds": 70.58946694999986,
+   "batches_committed": 2000,
+   "batches_failed": 0,
+   "batches_per_s": 28.89949574835264,
+   "write_errors": 0,
+   "finalize_errors": 0,
+   "error_types": {},
+   "commit_p50_ms": 355.05246100001386,
+   "commit_p95_ms": 421.96194999996806,
+   "commit_p99_ms": 711.7722600000889,
+   "commit_max_ms": 973.871618999965,
+   "behind_p95_ms": null,
+   "behind_max_ms": null,
+   "fresh_samples": 1116,
+   "fresh_skipped": 924,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 33.48359600022377,
+   "visible_after_p95_ms": 48.556896000263805,
+   "visible_after_max_ms": 49.9536510001235,
+   "fresh_read_p50_ms": 39.33656999970481,
+   "fresh_read_p95_ms": 48.855684000045585,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 14644.933638000111,
+   "finalize_max_ms": 14676.07554999995,
+   "read_trace_p50_ms": 576.5325649999795,
+   "read_trace_max_ms": 1486.2218239995855,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 14.345744102000026,
+   "reprocess_finalize_ms": 8050.953734999894,
+   "reprocess_read_ms": 660.1345950002724,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": 0.41624993799996446,
+   "read_trace_after_maintain_p50_ms": 481.1860899999374,
+   "verified_after_maintain": true
+  }
+ ]
+}

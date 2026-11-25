@@ -1,0 +1,67 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T10:24:36+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "vortex": "duckdb 2.0.1 with its vortex extension, Vortex files under s3"
+ },
+ "descriptions": {
+  "vortex": "Vortex files and no catalog, written and read through DuckDB's vortex extension. Each delivery of a batch is\none file at its own key, named for the trace, version, batch and attempt, and no file is ever overwritten: the\nextension keeps file metadata for the life of the process, and a file replaced at the same key is then read wrongly.\nClosing a trace writes a small control object naming its current version, and readers scan that version's files\nand keep the latest delivery of each batch. Nothing is ever deleted."
+ },
+ "results": [
+  {
+   "option": "vortex",
+   "traces": 4,
+   "batches_per_trace": 500,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": null,
+   "redelivered": 40,
+   "load_seconds": 48.40595746200006,
+   "batches_committed": 2000,
+   "batches_failed": 0,
+   "batches_per_s": 42.1435729600319,
+   "write_errors": 0,
+   "finalize_errors": 0,
+   "error_types": {},
+   "commit_p50_ms": 357.73588500001097,
+   "commit_p95_ms": 436.788684000021,
+   "commit_p99_ms": 663.1077920001189,
+   "commit_max_ms": 955.8303129999786,
+   "behind_p95_ms": null,
+   "behind_max_ms": null,
+   "fresh_samples": 616,
+   "fresh_skipped": 1424,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 34.317630000032295,
+   "visible_after_p95_ms": 48.65221999989444,
+   "visible_after_max_ms": 49.89376000003176,
+   "fresh_read_p50_ms": 72.45068799988985,
+   "fresh_read_p95_ms": 97.75930099999641,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 257.5023639999472,
+   "finalize_max_ms": 270.7399079999959,
+   "read_trace_p50_ms": 3684.2985170001157,
+   "read_trace_max_ms": 3804.5975559998624,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 6.654061099000046,
+   "reprocess_finalize_ms": 303.6267829997996,
+   "reprocess_read_ms": 1955.2908959999513,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": null,
+   "read_trace_after_maintain_p50_ms": null,
+   "verified_after_maintain": null
+  }
+ ]
+}

@@ -14,7 +14,17 @@ PIPELINE_NAMES = [
     "ducklake-aurora-sv2-rate",
     "iceberg-per-batch-s3tables-rate-small",
     "iceberg-per-trace-s3tables-rate",
+    "run3-delta-per-batch-s3-rate",
+    "run3-delta-per-trace-s3-rate",
+    "run3-lance-per-batch-s3-rate",
+    "run3-lance-per-trace-s3-rate",
     "files-s3-rate",
+    "run3-vortex-s3-rate",
+]
+PIPELINE_LABELS = [
+    "DuckLake, Aurora provisioned", "DuckLake, Aurora Serverless v2", "Iceberg per batch, S3 Tables",
+    "Iceberg per trace, S3 Tables", "Delta Lake per batch", "Delta Lake per trace", "Lance per batch",
+    "Lance per trace", "Parquet files on S3", "Vortex files on S3",
 ]
 
 
@@ -38,7 +48,7 @@ def results_dir(tmp_path):
     for name, runs in files.items():
         (root / name).write_text(json.dumps({"results": runs, "descriptions": {}}))
     for i, name in enumerate(PIPELINE_NAMES):
-        slow = "per-batch" in name
+        slow = "iceberg-per-batch" in name
         row = {
             "commit_p50_ms": 6132.9 if slow else 90.0 + i,
             "finalize_max_ms": 27367.5 if slow else 80.0 + i,
@@ -145,18 +155,37 @@ def test_commit_rate_labels_do_not_overlap(results_dir):
 
 
 @pytest.mark.parametrize("dark", [False, True])
-def test_pipeline_chart_has_three_panels_five_rows_and_a_value_on_every_bar(results_dir, dark):
+def test_pipeline_chart_has_three_panels_ten_rows_and_a_value_on_every_bar(results_dir, dark):
     rows = charts.load_pipeline(results_dir / "pipeline")
     assert [r["name"] for r in rows] == PIPELINE_NAMES
     svg = charts.pipeline_svg(rows, dark=dark)
     texts = _texts(svg)
     for expected in ("One pipeline flow at 1.25 batches per second", "Write one batch (median)",
-                     "Close a trace (slowest)", "Read one trace back (median)", "DuckLake, Aurora provisioned",
-                     "DuckLake, Aurora Serverless v2", "Iceberg per batch, S3 Tables",
-                     "Iceberg per trace, S3 Tables", "Parquet files on S3", "6.1 s", "27 s", "2.2 s", "90 ms"):
+                     "Close a trace (slowest)", "Read one trace back (median)", *PIPELINE_LABELS,
+                     "6.1 s", "27 s", "2.2 s", "90 ms"):
         assert expected in texts, expected
     bars = [p for p in ET.fromstring(svg).iter(f"{SVG}path") if p.get("class") == "bar"]
-    assert len(bars) == 15
+    assert len(bars) == 30
+
+
+def test_the_rerun_of_plain_files_is_not_a_second_row(results_dir):
+    (results_dir / "pipeline" / "ec2-run3-files-s3-rate.json").write_text(
+        (results_dir / "pipeline" / "ec2-files-s3-rate.json").read_text())
+    assert [r["name"] for r in charts.load_pipeline(results_dir / "pipeline")] == PIPELINE_NAMES
+
+
+def test_the_footnote_names_the_rows_that_shared_one_instance_and_fits_the_width(results_dir):
+    rows = charts.load_pipeline(results_dir / "pipeline")
+    root = ET.fromstring(charts.pipeline_svg(rows))
+    notes = ["".join(t.itertext()) for t in root.iter(f"{SVG}text") if t.get("class") == "note"]
+    shared = [n for n in notes if "one instance" in n]
+    assert len(shared) == 1 and all(word in shared[0] for word in ("Delta Lake", "Lance", "Vortex"))
+    assert any("900 batches" in n for n in notes)
+    assert all(len(n) <= 150 for n in notes), notes  # about what 828 px holds at this size
+    ys = [float(t.get("y")) for t in root.iter(f"{SVG}text") if t.get("class") == "note"]
+    assert len(set(ys)) == len(ys) and max(ys) < float(root.get("viewBox").split()[3])
+    earlier = [r for r in rows if not r["name"].startswith("run3-")]
+    assert not [t for t in _texts(charts.pipeline_svg(earlier)) if "one instance" in t]
 
 
 def test_only_the_row_that_fell_behind_schedule_says_so(results_dir):

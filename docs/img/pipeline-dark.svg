@@ -1,71 +1,107 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 390" role="img" aria-labelledby="chart-title chart-desc" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 557" role="img" aria-labelledby="chart-title chart-desc" font-family="system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
 <title id="chart-title">One pipeline flow at 1.25 batches per second</title>
-<desc id="chart-desc">Three panels of horizontal bars on a shared log scale. DuckLake, Aurora provisioned: write one batch (median) 94 ms, close a trace (slowest) 82 ms, read one trace back (median) 349 ms. DuckLake, Aurora Serverless v2: write one batch (median) 96 ms, close a trace (slowest) 87 ms, read one trace back (median) 340 ms. Iceberg per batch, S3 Tables: write one batch (median) 6.1 s, close a trace (slowest) 27 s, read one trace back (median) 2.2 s, fell behind schedule at 1.13 batches per second. Iceberg per trace, S3 Tables: write one batch (median) 341 ms, close a trace (slowest) 9.4 s, read one trace back (median) 271 ms. Parquet files on S3: write one batch (median) 342 ms, close a trace (slowest) 331 ms, read one trace back (median) 5.7 s.</desc>
+<desc id="chart-desc">Three panels of horizontal bars on a shared log scale. DuckLake, Aurora provisioned: write one batch (median) 94 ms, close a trace (slowest) 82 ms, read one trace back (median) 349 ms. DuckLake, Aurora Serverless v2: write one batch (median) 96 ms, close a trace (slowest) 87 ms, read one trace back (median) 340 ms. Iceberg per batch, S3 Tables: write one batch (median) 6.1 s, close a trace (slowest) 27 s, read one trace back (median) 2.2 s, fell behind schedule at 1.13 batches per second. Iceberg per trace, S3 Tables: write one batch (median) 341 ms, close a trace (slowest) 9.4 s, read one trace back (median) 271 ms. Delta Lake per batch: write one batch (median) 1.3 s, close a trace (slowest) 1.2 s, read one trace back (median) 2.1 s. Delta Lake per trace: write one batch (median) 360 ms, close a trace (slowest) 8.9 s, read one trace back (median) 395 ms. Lance per batch: write one batch (median) 634 ms, close a trace (slowest) 3.9 s, read one trace back (median) 4.3 s. Lance per trace: write one batch (median) 359 ms, close a trace (slowest) 11 s, read one trace back (median) 971 ms. Parquet files on S3: write one batch (median) 342 ms, close a trace (slowest) 331 ms, read one trace back (median) 5.7 s. Vortex files on S3: write one batch (median) 361 ms, close a trace (slowest) 292 ms, read one trace back (median) 2.7 s. The Delta Lake, Lance and Vortex rows ran at the same time on one instance, so their times include contention with each other.</desc>
 <text x="16.0" y="28.0" font-size="17" fill="#f0efec" text-anchor="start" font-weight="600">One pipeline flow at 1.25 batches per second</text>
 <text x="16.0" y="49.0" font-size="12.5" fill="#c3c2b7" text-anchor="start">Single run each, 16 workers, 5,000 rows per batch, batch data on S3. Shorter bars are faster.</text>
-<text x="16.0" y="125.0" font-size="12" fill="#f0efec" text-anchor="start">DuckLake, Aurora provisioned</text>
-<text x="16.0" y="171.0" font-size="12" fill="#f0efec" text-anchor="start">DuckLake, Aurora Serverless v2</text>
-<text x="16.0" y="210.0" font-size="12" fill="#f0efec" text-anchor="start">Iceberg per batch, S3 Tables</text>
-<path d="M16 228.0 l5 -9 l5 9 Z" fill="#ec835a"/>
-<text x="31.0" y="228.0" font-size="11.5" fill="#c3c2b7" text-anchor="start">behind schedule: 1.13 batches/s</text>
-<text x="16.0" y="263.0" font-size="12" fill="#f0efec" text-anchor="start">Iceberg per trace, S3 Tables</text>
-<text x="16.0" y="309.0" font-size="12" fill="#f0efec" text-anchor="start">Parquet files on S3</text>
+<text x="16.0" y="121.0" font-size="12" fill="#f0efec" text-anchor="start">DuckLake, Aurora provisioned</text>
+<text x="16.0" y="159.0" font-size="12" fill="#f0efec" text-anchor="start">DuckLake, Aurora Serverless v2</text>
+<text x="16.0" y="190.0" font-size="12" fill="#f0efec" text-anchor="start">Iceberg per batch, S3 Tables</text>
+<path d="M16 208.0 l5 -9 l5 9 Z" fill="#ec835a"/>
+<text x="31.0" y="208.0" font-size="11.5" fill="#c3c2b7" text-anchor="start">behind schedule: 1.13 batches/s</text>
+<text x="16.0" y="235.0" font-size="12" fill="#f0efec" text-anchor="start">Iceberg per trace, S3 Tables</text>
+<text x="16.0" y="273.0" font-size="12" fill="#f0efec" text-anchor="start">Delta Lake per batch</text>
+<text x="16.0" y="311.0" font-size="12" fill="#f0efec" text-anchor="start">Delta Lake per trace</text>
+<text x="16.0" y="349.0" font-size="12" fill="#f0efec" text-anchor="start">Lance per batch</text>
+<text x="16.0" y="387.0" font-size="12" fill="#f0efec" text-anchor="start">Lance per trace</text>
+<text x="16.0" y="425.0" font-size="12" fill="#f0efec" text-anchor="start">Parquet files on S3</text>
+<text x="16.0" y="463.0" font-size="12" fill="#f0efec" text-anchor="start">Vortex files on S3</text>
 <text x="232.0" y="82.0" font-size="12" fill="#f0efec" text-anchor="start" font-weight="600">Write one batch (median)</text>
-<line x1="232.0" x2="232.0" y1="94" y2="332" stroke="#484f58"/>
-<text x="232.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="start">10 ms</text>
-<line x1="266.5" x2="266.5" y1="94" y2="332" stroke="#262c36"/>
-<line x1="301.0" x2="301.0" y1="94" y2="332" stroke="#262c36"/>
-<text x="301.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="middle">1 s</text>
-<line x1="335.5" x2="335.5" y1="94" y2="332" stroke="#262c36"/>
-<line x1="370.0" x2="370.0" y1="94" y2="332" stroke="#262c36"/>
-<text x="370.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="middle">100 s</text>
-<path class="bar" data-ms="93.9" data-length="33.6" fill="#3987e5" d="M232 113.0 H261.6 Q265.6 113.0 265.6 117.0 V125.0 Q265.6 129.0 261.6 129.0 H232 Z"><title>DuckLake, Aurora provisioned, write one batch (median): 94 ms</title></path>
-<text x="271.6" y="125.0" font-size="12" fill="#f0efec" text-anchor="start">94 ms</text>
-<path class="bar" data-ms="96.3" data-length="33.9" fill="#3987e5" d="M232 159.0 H261.9 Q265.9 159.0 265.9 163.0 V171.0 Q265.9 175.0 261.9 175.0 H232 Z"><title>DuckLake, Aurora Serverless v2, write one batch (median): 96 ms</title></path>
-<text x="271.9" y="171.0" font-size="12" fill="#f0efec" text-anchor="start">96 ms</text>
-<path class="bar" data-ms="6132.9" data-length="96.2" fill="#3987e5" d="M232 205.0 H324.2 Q328.2 205.0 328.2 209.0 V217.0 Q328.2 221.0 324.2 221.0 H232 Z"><title>Iceberg per batch, S3 Tables, write one batch (median): 6.1 s</title></path>
-<text x="334.2" y="217.0" font-size="12" fill="#f0efec" text-anchor="start">6.1 s</text>
-<path class="bar" data-ms="340.6" data-length="52.9" fill="#3987e5" d="M232 251.0 H280.9 Q284.9 251.0 284.9 255.0 V263.0 Q284.9 267.0 280.9 267.0 H232 Z"><title>Iceberg per trace, S3 Tables, write one batch (median): 341 ms</title></path>
-<text x="290.9" y="263.0" font-size="12" fill="#f0efec" text-anchor="start">341 ms</text>
-<path class="bar" data-ms="342.5" data-length="52.9" fill="#3987e5" d="M232 297.0 H280.9 Q284.9 297.0 284.9 301.0 V309.0 Q284.9 313.0 280.9 313.0 H232 Z"><title>Parquet files on S3, write one batch (median): 342 ms</title></path>
-<text x="290.9" y="309.0" font-size="12" fill="#f0efec" text-anchor="start">342 ms</text>
+<line x1="232.0" x2="232.0" y1="94" y2="482" stroke="#484f58"/>
+<text x="232.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="start">10 ms</text>
+<line x1="266.5" x2="266.5" y1="94" y2="482" stroke="#262c36"/>
+<line x1="301.0" x2="301.0" y1="94" y2="482" stroke="#262c36"/>
+<text x="301.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="middle">1 s</text>
+<line x1="335.5" x2="335.5" y1="94" y2="482" stroke="#262c36"/>
+<line x1="370.0" x2="370.0" y1="94" y2="482" stroke="#262c36"/>
+<text x="370.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="middle">100 s</text>
+<path class="bar" data-ms="93.9" data-length="33.6" fill="#3987e5" d="M232 109.0 H261.6 Q265.6 109.0 265.6 113.0 V121.0 Q265.6 125.0 261.6 125.0 H232 Z"><title>DuckLake, Aurora provisioned, write one batch (median): 94 ms</title></path>
+<text x="271.6" y="121.0" font-size="12" fill="#f0efec" text-anchor="start">94 ms</text>
+<path class="bar" data-ms="96.3" data-length="33.9" fill="#3987e5" d="M232 147.0 H261.9 Q265.9 147.0 265.9 151.0 V159.0 Q265.9 163.0 261.9 163.0 H232 Z"><title>DuckLake, Aurora Serverless v2, write one batch (median): 96 ms</title></path>
+<text x="271.9" y="159.0" font-size="12" fill="#f0efec" text-anchor="start">96 ms</text>
+<path class="bar" data-ms="6132.9" data-length="96.2" fill="#3987e5" d="M232 185.0 H324.2 Q328.2 185.0 328.2 189.0 V197.0 Q328.2 201.0 324.2 201.0 H232 Z"><title>Iceberg per batch, S3 Tables, write one batch (median): 6.1 s</title></path>
+<text x="334.2" y="197.0" font-size="12" fill="#f0efec" text-anchor="start">6.1 s</text>
+<path class="bar" data-ms="340.6" data-length="52.9" fill="#3987e5" d="M232 223.0 H280.9 Q284.9 223.0 284.9 227.0 V235.0 Q284.9 239.0 280.9 239.0 H232 Z"><title>Iceberg per trace, S3 Tables, write one batch (median): 341 ms</title></path>
+<text x="290.9" y="235.0" font-size="12" fill="#f0efec" text-anchor="start">341 ms</text>
+<path class="bar" data-ms="1285.2" data-length="72.8" fill="#3987e5" d="M232 261.0 H300.8 Q304.8 261.0 304.8 265.0 V273.0 Q304.8 277.0 300.8 277.0 H232 Z"><title>Delta Lake per batch, write one batch (median): 1.3 s</title></path>
+<text x="310.8" y="273.0" font-size="12" fill="#f0efec" text-anchor="start">1.3 s</text>
+<path class="bar" data-ms="360.0" data-length="53.7" fill="#3987e5" d="M232 299.0 H281.7 Q285.7 299.0 285.7 303.0 V311.0 Q285.7 315.0 281.7 315.0 H232 Z"><title>Delta Lake per trace, write one batch (median): 360 ms</title></path>
+<text x="291.7" y="311.0" font-size="12" fill="#f0efec" text-anchor="start">360 ms</text>
+<path class="bar" data-ms="633.7" data-length="62.2" fill="#3987e5" d="M232 337.0 H290.2 Q294.2 337.0 294.2 341.0 V349.0 Q294.2 353.0 290.2 353.0 H232 Z"><title>Lance per batch, write one batch (median): 634 ms</title></path>
+<text x="300.2" y="349.0" font-size="12" fill="#f0efec" text-anchor="start">634 ms</text>
+<path class="bar" data-ms="358.8" data-length="53.6" fill="#3987e5" d="M232 375.0 H281.6 Q285.6 375.0 285.6 379.0 V387.0 Q285.6 391.0 281.6 391.0 H232 Z"><title>Lance per trace, write one batch (median): 359 ms</title></path>
+<text x="291.6" y="387.0" font-size="12" fill="#f0efec" text-anchor="start">359 ms</text>
+<path class="bar" data-ms="342.5" data-length="52.9" fill="#3987e5" d="M232 413.0 H280.9 Q284.9 413.0 284.9 417.0 V425.0 Q284.9 429.0 280.9 429.0 H232 Z"><title>Parquet files on S3, write one batch (median): 342 ms</title></path>
+<text x="290.9" y="425.0" font-size="12" fill="#f0efec" text-anchor="start">342 ms</text>
+<path class="bar" data-ms="361.1" data-length="53.7" fill="#3987e5" d="M232 451.0 H281.7 Q285.7 451.0 285.7 455.0 V463.0 Q285.7 467.0 281.7 467.0 H232 Z"><title>Vortex files on S3, write one batch (median): 361 ms</title></path>
+<text x="291.7" y="463.0" font-size="12" fill="#f0efec" text-anchor="start">361 ms</text>
 <text x="440.0" y="82.0" font-size="12" fill="#f0efec" text-anchor="start" font-weight="600">Close a trace (slowest)</text>
-<line x1="440.0" x2="440.0" y1="94" y2="332" stroke="#484f58"/>
-<text x="440.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="start">10 ms</text>
-<line x1="474.5" x2="474.5" y1="94" y2="332" stroke="#262c36"/>
-<line x1="509.0" x2="509.0" y1="94" y2="332" stroke="#262c36"/>
-<text x="509.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="middle">1 s</text>
-<line x1="543.5" x2="543.5" y1="94" y2="332" stroke="#262c36"/>
-<line x1="578.0" x2="578.0" y1="94" y2="332" stroke="#262c36"/>
-<text x="578.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="middle">100 s</text>
-<path class="bar" data-ms="81.9" data-length="31.5" fill="#3987e5" d="M440 113.0 H467.5 Q471.5 113.0 471.5 117.0 V125.0 Q471.5 129.0 467.5 129.0 H440 Z"><title>DuckLake, Aurora provisioned, close a trace (slowest): 82 ms</title></path>
-<text x="477.5" y="125.0" font-size="12" fill="#f0efec" text-anchor="start">82 ms</text>
-<path class="bar" data-ms="87.3" data-length="32.5" fill="#3987e5" d="M440 159.0 H468.5 Q472.5 159.0 472.5 163.0 V171.0 Q472.5 175.0 468.5 175.0 H440 Z"><title>DuckLake, Aurora Serverless v2, close a trace (slowest): 87 ms</title></path>
-<text x="478.5" y="171.0" font-size="12" fill="#f0efec" text-anchor="start">87 ms</text>
-<path class="bar" data-ms="27367.5" data-length="118.6" fill="#3987e5" d="M440 205.0 H554.6 Q558.6 205.0 558.6 209.0 V217.0 Q558.6 221.0 554.6 221.0 H440 Z"><title>Iceberg per batch, S3 Tables, close a trace (slowest): 27 s</title></path>
-<text x="564.6" y="217.0" font-size="12" fill="#f0efec" text-anchor="start">27 s</text>
-<path class="bar" data-ms="9406.7" data-length="102.6" fill="#3987e5" d="M440 251.0 H538.6 Q542.6 251.0 542.6 255.0 V263.0 Q542.6 267.0 538.6 267.0 H440 Z"><title>Iceberg per trace, S3 Tables, close a trace (slowest): 9.4 s</title></path>
-<text x="548.6" y="263.0" font-size="12" fill="#f0efec" text-anchor="start">9.4 s</text>
-<path class="bar" data-ms="331.1" data-length="52.4" fill="#3987e5" d="M440 297.0 H488.4 Q492.4 297.0 492.4 301.0 V309.0 Q492.4 313.0 488.4 313.0 H440 Z"><title>Parquet files on S3, close a trace (slowest): 331 ms</title></path>
-<text x="498.4" y="309.0" font-size="12" fill="#f0efec" text-anchor="start">331 ms</text>
+<line x1="440.0" x2="440.0" y1="94" y2="482" stroke="#484f58"/>
+<text x="440.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="start">10 ms</text>
+<line x1="474.5" x2="474.5" y1="94" y2="482" stroke="#262c36"/>
+<line x1="509.0" x2="509.0" y1="94" y2="482" stroke="#262c36"/>
+<text x="509.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="middle">1 s</text>
+<line x1="543.5" x2="543.5" y1="94" y2="482" stroke="#262c36"/>
+<line x1="578.0" x2="578.0" y1="94" y2="482" stroke="#262c36"/>
+<text x="578.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="middle">100 s</text>
+<path class="bar" data-ms="81.9" data-length="31.5" fill="#3987e5" d="M440 109.0 H467.5 Q471.5 109.0 471.5 113.0 V121.0 Q471.5 125.0 467.5 125.0 H440 Z"><title>DuckLake, Aurora provisioned, close a trace (slowest): 82 ms</title></path>
+<text x="477.5" y="121.0" font-size="12" fill="#f0efec" text-anchor="start">82 ms</text>
+<path class="bar" data-ms="87.3" data-length="32.5" fill="#3987e5" d="M440 147.0 H468.5 Q472.5 147.0 472.5 151.0 V159.0 Q472.5 163.0 468.5 163.0 H440 Z"><title>DuckLake, Aurora Serverless v2, close a trace (slowest): 87 ms</title></path>
+<text x="478.5" y="159.0" font-size="12" fill="#f0efec" text-anchor="start">87 ms</text>
+<path class="bar" data-ms="27367.5" data-length="118.6" fill="#3987e5" d="M440 185.0 H554.6 Q558.6 185.0 558.6 189.0 V197.0 Q558.6 201.0 554.6 201.0 H440 Z"><title>Iceberg per batch, S3 Tables, close a trace (slowest): 27 s</title></path>
+<text x="564.6" y="197.0" font-size="12" fill="#f0efec" text-anchor="start">27 s</text>
+<path class="bar" data-ms="9406.7" data-length="102.6" fill="#3987e5" d="M440 223.0 H538.6 Q542.6 223.0 542.6 227.0 V235.0 Q542.6 239.0 538.6 239.0 H440 Z"><title>Iceberg per trace, S3 Tables, close a trace (slowest): 9.4 s</title></path>
+<text x="548.6" y="235.0" font-size="12" fill="#f0efec" text-anchor="start">9.4 s</text>
+<path class="bar" data-ms="1151.4" data-length="71.1" fill="#3987e5" d="M440 261.0 H507.1 Q511.1 261.0 511.1 265.0 V273.0 Q511.1 277.0 507.1 277.0 H440 Z"><title>Delta Lake per batch, close a trace (slowest): 1.2 s</title></path>
+<text x="517.1" y="273.0" font-size="12" fill="#f0efec" text-anchor="start">1.2 s</text>
+<path class="bar" data-ms="8933.2" data-length="101.8" fill="#3987e5" d="M440 299.0 H537.8 Q541.8 299.0 541.8 303.0 V311.0 Q541.8 315.0 537.8 315.0 H440 Z"><title>Delta Lake per trace, close a trace (slowest): 8.9 s</title></path>
+<text x="547.8" y="311.0" font-size="12" fill="#f0efec" text-anchor="start">8.9 s</text>
+<path class="bar" data-ms="3928.4" data-length="89.5" fill="#3987e5" d="M440 337.0 H525.5 Q529.5 337.0 529.5 341.0 V349.0 Q529.5 353.0 525.5 353.0 H440 Z"><title>Lance per batch, close a trace (slowest): 3.9 s</title></path>
+<text x="535.5" y="349.0" font-size="12" fill="#f0efec" text-anchor="start">3.9 s</text>
+<path class="bar" data-ms="10872.3" data-length="104.8" fill="#3987e5" d="M440 375.0 H540.8 Q544.8 375.0 544.8 379.0 V387.0 Q544.8 391.0 540.8 391.0 H440 Z"><title>Lance per trace, close a trace (slowest): 11 s</title></path>
+<text x="550.8" y="387.0" font-size="12" fill="#f0efec" text-anchor="start">11 s</text>
+<path class="bar" data-ms="331.1" data-length="52.4" fill="#3987e5" d="M440 413.0 H488.4 Q492.4 413.0 492.4 417.0 V425.0 Q492.4 429.0 488.4 429.0 H440 Z"><title>Parquet files on S3, close a trace (slowest): 331 ms</title></path>
+<text x="498.4" y="425.0" font-size="12" fill="#f0efec" text-anchor="start">331 ms</text>
+<path class="bar" data-ms="292.2" data-length="50.6" fill="#3987e5" d="M440 451.0 H486.6 Q490.6 451.0 490.6 455.0 V463.0 Q490.6 467.0 486.6 467.0 H440 Z"><title>Vortex files on S3, close a trace (slowest): 292 ms</title></path>
+<text x="496.6" y="463.0" font-size="12" fill="#f0efec" text-anchor="start">292 ms</text>
 <text x="648.0" y="82.0" font-size="12" fill="#f0efec" text-anchor="start" font-weight="600">Read one trace back (median)</text>
-<line x1="648.0" x2="648.0" y1="94" y2="332" stroke="#484f58"/>
-<text x="648.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="start">10 ms</text>
-<line x1="682.5" x2="682.5" y1="94" y2="332" stroke="#262c36"/>
-<line x1="717.0" x2="717.0" y1="94" y2="332" stroke="#262c36"/>
-<text x="717.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="middle">1 s</text>
-<line x1="751.5" x2="751.5" y1="94" y2="332" stroke="#262c36"/>
-<line x1="786.0" x2="786.0" y1="94" y2="332" stroke="#262c36"/>
-<text x="786.0" y="348.0" font-size="11" fill="#c3c2b7" text-anchor="middle">100 s</text>
-<path class="bar" data-ms="349.0" data-length="53.2" fill="#3987e5" d="M648 113.0 H697.2 Q701.2 113.0 701.2 117.0 V125.0 Q701.2 129.0 697.2 129.0 H648 Z"><title>DuckLake, Aurora provisioned, read one trace back (median): 349 ms</title></path>
-<text x="707.2" y="125.0" font-size="12" fill="#f0efec" text-anchor="start">349 ms</text>
-<path class="bar" data-ms="339.8" data-length="52.8" fill="#3987e5" d="M648 159.0 H696.8 Q700.8 159.0 700.8 163.0 V171.0 Q700.8 175.0 696.8 175.0 H648 Z"><title>DuckLake, Aurora Serverless v2, read one trace back (median): 340 ms</title></path>
-<text x="706.8" y="171.0" font-size="12" fill="#f0efec" text-anchor="start">340 ms</text>
-<path class="bar" data-ms="2167.4" data-length="80.6" fill="#3987e5" d="M648 205.0 H724.6 Q728.6 205.0 728.6 209.0 V217.0 Q728.6 221.0 724.6 221.0 H648 Z"><title>Iceberg per batch, S3 Tables, read one trace back (median): 2.2 s</title></path>
-<text x="734.6" y="217.0" font-size="12" fill="#f0efec" text-anchor="start">2.2 s</text>
-<path class="bar" data-ms="270.5" data-length="49.4" fill="#3987e5" d="M648 251.0 H693.4 Q697.4 251.0 697.4 255.0 V263.0 Q697.4 267.0 693.4 267.0 H648 Z"><title>Iceberg per trace, S3 Tables, read one trace back (median): 271 ms</title></path>
-<text x="703.4" y="263.0" font-size="12" fill="#f0efec" text-anchor="start">271 ms</text>
-<path class="bar" data-ms="5724.4" data-length="95.1" fill="#3987e5" d="M648 297.0 H739.1 Q743.1 297.0 743.1 301.0 V309.0 Q743.1 313.0 739.1 313.0 H648 Z"><title>Parquet files on S3, read one trace back (median): 5.7 s</title></path>
-<text x="749.1" y="309.0" font-size="12" fill="#f0efec" text-anchor="start">5.7 s</text>
-<text x="16.0" y="374.0" font-size="11.5" fill="#c3c2b7" text-anchor="start">All three panels share one log scale starting at 10 ms. Iceberg per batch, S3 Tables ran 900 batches; the others ran 1,800.</text>
+<line x1="648.0" x2="648.0" y1="94" y2="482" stroke="#484f58"/>
+<text x="648.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="start">10 ms</text>
+<line x1="682.5" x2="682.5" y1="94" y2="482" stroke="#262c36"/>
+<line x1="717.0" x2="717.0" y1="94" y2="482" stroke="#262c36"/>
+<text x="717.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="middle">1 s</text>
+<line x1="751.5" x2="751.5" y1="94" y2="482" stroke="#262c36"/>
+<line x1="786.0" x2="786.0" y1="94" y2="482" stroke="#262c36"/>
+<text x="786.0" y="498.0" font-size="11" fill="#c3c2b7" text-anchor="middle">100 s</text>
+<path class="bar" data-ms="349.0" data-length="53.2" fill="#3987e5" d="M648 109.0 H697.2 Q701.2 109.0 701.2 113.0 V121.0 Q701.2 125.0 697.2 125.0 H648 Z"><title>DuckLake, Aurora provisioned, read one trace back (median): 349 ms</title></path>
+<text x="707.2" y="121.0" font-size="12" fill="#f0efec" text-anchor="start">349 ms</text>
+<path class="bar" data-ms="339.8" data-length="52.8" fill="#3987e5" d="M648 147.0 H696.8 Q700.8 147.0 700.8 151.0 V159.0 Q700.8 163.0 696.8 163.0 H648 Z"><title>DuckLake, Aurora Serverless v2, read one trace back (median): 340 ms</title></path>
+<text x="706.8" y="159.0" font-size="12" fill="#f0efec" text-anchor="start">340 ms</text>
+<path class="bar" data-ms="2167.4" data-length="80.6" fill="#3987e5" d="M648 185.0 H724.6 Q728.6 185.0 728.6 189.0 V197.0 Q728.6 201.0 724.6 201.0 H648 Z"><title>Iceberg per batch, S3 Tables, read one trace back (median): 2.2 s</title></path>
+<text x="734.6" y="197.0" font-size="12" fill="#f0efec" text-anchor="start">2.2 s</text>
+<path class="bar" data-ms="270.5" data-length="49.4" fill="#3987e5" d="M648 223.0 H693.4 Q697.4 223.0 697.4 227.0 V235.0 Q697.4 239.0 693.4 239.0 H648 Z"><title>Iceberg per trace, S3 Tables, read one trace back (median): 271 ms</title></path>
+<text x="703.4" y="235.0" font-size="12" fill="#f0efec" text-anchor="start">271 ms</text>
+<path class="bar" data-ms="2056.9" data-length="79.8" fill="#3987e5" d="M648 261.0 H723.8 Q727.8 261.0 727.8 265.0 V273.0 Q727.8 277.0 723.8 277.0 H648 Z"><title>Delta Lake per batch, read one trace back (median): 2.1 s</title></path>
+<text x="733.8" y="273.0" font-size="12" fill="#f0efec" text-anchor="start">2.1 s</text>
+<path class="bar" data-ms="395.0" data-length="55.1" fill="#3987e5" d="M648 299.0 H699.1 Q703.1 299.0 703.1 303.0 V311.0 Q703.1 315.0 699.1 315.0 H648 Z"><title>Delta Lake per trace, read one trace back (median): 395 ms</title></path>
+<text x="709.1" y="311.0" font-size="12" fill="#f0efec" text-anchor="start">395 ms</text>
+<path class="bar" data-ms="4339.1" data-length="91.0" fill="#3987e5" d="M648 337.0 H735.0 Q739.0 337.0 739.0 341.0 V349.0 Q739.0 353.0 735.0 353.0 H648 Z"><title>Lance per batch, read one trace back (median): 4.3 s</title></path>
+<text x="745.0" y="349.0" font-size="12" fill="#f0efec" text-anchor="start">4.3 s</text>
+<path class="bar" data-ms="971.0" data-length="68.6" fill="#3987e5" d="M648 375.0 H712.6 Q716.6 375.0 716.6 379.0 V387.0 Q716.6 391.0 712.6 391.0 H648 Z"><title>Lance per trace, read one trace back (median): 971 ms</title></path>
+<text x="722.6" y="387.0" font-size="12" fill="#f0efec" text-anchor="start">971 ms</text>
+<path class="bar" data-ms="5724.4" data-length="95.1" fill="#3987e5" d="M648 413.0 H739.1 Q743.1 413.0 743.1 417.0 V425.0 Q743.1 429.0 739.1 429.0 H648 Z"><title>Parquet files on S3, read one trace back (median): 5.7 s</title></path>
+<text x="749.1" y="425.0" font-size="12" fill="#f0efec" text-anchor="start">5.7 s</text>
+<path class="bar" data-ms="2711.5" data-length="83.9" fill="#3987e5" d="M648 451.0 H727.9 Q731.9 451.0 731.9 455.0 V463.0 Q731.9 467.0 727.9 467.0 H648 Z"><title>Vortex files on S3, read one trace back (median): 2.7 s</title></path>
+<text x="737.9" y="463.0" font-size="12" fill="#f0efec" text-anchor="start">2.7 s</text>
+<text x="16.0" y="524.0" font-size="11.5" fill="#c3c2b7" text-anchor="start" class="note">All three panels share one log scale starting at 10 ms. Iceberg per batch, S3 Tables ran 900 batches; the others ran 1,800.</text>
+<text x="16.0" y="541.0" font-size="11.5" fill="#c3c2b7" text-anchor="start" class="note">The Delta Lake, Lance and Vortex rows ran at the same time on one instance, so their times include contention with each other.</text>
 </svg>

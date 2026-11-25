@@ -1,0 +1,67 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T09:54:38+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "delta-per-trace": "deltalake 1.7.0 (delta-rs), read with duckdb 2.0.1, pyarrow 26.0.1; data under s3"
+ },
+ "descriptions": {
+  "delta-per-trace": "Delta Lake through delta-rs, one commit per trace, with no catalog: the table's log is in the data directory.\nEach batch is written as plain Parquet files outside the table, at a key fixed by trace, version and batch, so a\nsecond delivery overwrites the first; a reader that wants a fresh batch reads that file. Closing a trace reads its\nfiles back and replaces the trace's rows in the output table, then in the errors table, as two commits. Whole-trace\nreaders use DuckDB's delta extension. The files are kept. Maintenance compacts the two tables."
+ },
+ "results": [
+  {
+   "option": "delta-per-trace",
+   "traces": 6,
+   "batches_per_trace": 300,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": 1.25,
+   "redelivered": 36,
+   "load_seconds": 1448.4783813089998,
+   "batches_committed": 1800,
+   "batches_failed": 0,
+   "batches_per_s": 1.267537040035623,
+   "write_errors": 0,
+   "finalize_errors": 0,
+   "error_types": {},
+   "commit_p50_ms": 360.01672699990195,
+   "commit_p95_ms": 600.0419219999458,
+   "commit_p99_ms": 709.5467000000326,
+   "commit_max_ms": 893.7372749999781,
+   "behind_p95_ms": 0.07752300001584445,
+   "behind_max_ms": 34.274867000021914,
+   "fresh_samples": 1835,
+   "fresh_skipped": 1,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 5.562723000139158,
+   "visible_after_p95_ms": 6.854918999806614,
+   "visible_after_max_ms": 48.37466399999357,
+   "fresh_read_p50_ms": 38.48888899995018,
+   "fresh_read_p95_ms": 47.23665099993468,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 8810.360595999897,
+   "finalize_max_ms": 8933.177076999982,
+   "read_trace_p50_ms": 395.0461980000455,
+   "read_trace_max_ms": 1204.498233999857,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 124.54966107600012,
+   "reprocess_finalize_ms": 4976.392471000054,
+   "reprocess_read_ms": 296.9167970002218,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": 0.26499150400013605,
+   "read_trace_after_maintain_p50_ms": 398.6386550000134,
+   "verified_after_maintain": true
+  }
+ ]
+}

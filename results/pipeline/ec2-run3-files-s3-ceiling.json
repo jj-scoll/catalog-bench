@@ -1,0 +1,67 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T10:23:07+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "files": "pyarrow 26.0.1, Parquet files under s3"
+ },
+ "descriptions": {
+  "files": "Plain Parquet files and no catalog. Each batch is one file at a fixed key, so a second delivery overwrites the\nfirst. Closing a trace writes a small control object naming its current version, and readers list the trace's files\nand keep the rows of that version. Nothing is ever deleted."
+ },
+ "results": [
+  {
+   "option": "files",
+   "traces": 4,
+   "batches_per_trace": 500,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": null,
+   "redelivered": 40,
+   "load_seconds": 46.276971066000215,
+   "batches_committed": 2000,
+   "batches_failed": 0,
+   "batches_per_s": 44.08240109514843,
+   "write_errors": 0,
+   "finalize_errors": 0,
+   "error_types": {},
+   "commit_p50_ms": 344.92762300010327,
+   "commit_p95_ms": 415.88749299990013,
+   "commit_p99_ms": 602.4355140000353,
+   "commit_max_ms": 837.6103279999825,
+   "behind_p95_ms": null,
+   "behind_max_ms": null,
+   "fresh_samples": 525,
+   "fresh_skipped": 1515,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 34.06904299981761,
+   "visible_after_p95_ms": 48.70912900014446,
+   "visible_after_max_ms": 49.99645800012331,
+   "fresh_read_p50_ms": 83.87168600006589,
+   "fresh_read_p95_ms": 98.96582099986517,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 280.10949399981655,
+   "finalize_max_ms": 288.5303660000318,
+   "read_trace_p50_ms": 6377.1793169999,
+   "read_trace_max_ms": 6461.194922999994,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 6.729177015999994,
+   "reprocess_finalize_ms": 290.35763999991104,
+   "reprocess_read_ms": 4851.593693000041,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": null,
+   "read_trace_after_maintain_p50_ms": null,
+   "verified_after_maintain": null
+  }
+ ]
+}

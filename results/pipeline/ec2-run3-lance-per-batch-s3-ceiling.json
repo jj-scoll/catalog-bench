@@ -1,0 +1,72 @@
+{
+ "workload": "pipeline",
+ "environment": "EC2 c6id.4xlarge, ca-central-1",
+ "ran_at": "2026-11-25T10:40:48+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "lance-per-batch": "lance 14.0.3, read with duckdb 2.0.1, pyarrow 26.0.1; data under s3"
+ },
+ "descriptions": {
+  "lance-per-batch": "Lance datasets, one commit per batch, with no catalog: each dataset's manifests are in the data directory.\nEach batch appends its output rows and then its error rows, as two commits. Closing a trace deletes the trace's\nolder versions and appends its new version to a control dataset, as three more commits. Readers use DuckDB's lance\nextension, and take the recorded version and one delivery per batch. Maintenance compacts the two data datasets."
+ },
+ "results": [
+  {
+   "option": "lance-per-batch",
+   "traces": 4,
+   "batches_per_trace": 500,
+   "rows_per_batch": 5000,
+   "workers": 16,
+   "target_batches_per_s": null,
+   "redelivered": 40,
+   "load_seconds": 570.9644021039999,
+   "batches_committed": 2000,
+   "batches_failed": 0,
+   "batches_per_s": 3.572902255346593,
+   "write_errors": 135,
+   "finalize_errors": 0,
+   "error_types": {
+    "OSError": {
+     "count": 153,
+     "example": "OSError: Too many concurrent writers. Attempted 8 times, but failed on retry_timeout of 30.000 seconds., <home>/work/lance/lance/rust/lance/src/io/commit.rs:130:5"
+    }
+   },
+   "commit_p50_ms": 863.6336170002323,
+   "commit_p95_ms": 10746.065050000198,
+   "commit_p99_ms": 23816.251475999707,
+   "commit_max_ms": 31633.575580999604,
+   "behind_p95_ms": null,
+   "behind_max_ms": null,
+   "fresh_samples": 1843,
+   "fresh_skipped": 197,
+   "fresh_timeouts": 0,
+   "visible_after_p50_ms": 5.8446150001145725,
+   "visible_after_p95_ms": 29.055366999727994,
+   "visible_after_max_ms": 49.29043099991759,
+   "fresh_read_p50_ms": 220.98767899979066,
+   "fresh_read_p95_ms": 365.729112000281,
+   "finalize_retries": 0,
+   "finalize_p50_ms": 2858.352983000259,
+   "finalize_max_ms": 3141.2953260000904,
+   "read_trace_p50_ms": 3607.7444129996366,
+   "read_trace_max_ms": 10067.06525799973,
+   "rows_missing": 0,
+   "rows_duplicated": 0,
+   "rows_stale": 0,
+   "verified": true,
+   "reprocess_seconds": 97.38920518600025,
+   "reprocess_finalize_ms": 3082.3061920000328,
+   "reprocess_read_ms": 4156.132113999774,
+   "reprocess_rows_missing": 0,
+   "reprocess_rows_duplicated": 0,
+   "reprocess_rows_stale": 0,
+   "reprocess_verified": true,
+   "maintain_seconds": 4.8293168730001526,
+   "read_trace_after_maintain_p50_ms": 368.5906239998076,
+   "verified_after_maintain": true
+  }
+ ]
+}

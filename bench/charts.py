@@ -43,8 +43,17 @@ PIPELINE_ROWS = [
     ("ducklake-aurora-sv2-rate", "DuckLake, Aurora Serverless v2"),
     ("iceberg-per-batch-s3tables-rate-small", "Iceberg per batch, S3 Tables"),
     ("iceberg-per-trace-s3tables-rate", "Iceberg per trace, S3 Tables"),
+    ("run3-delta-per-batch-s3-rate", "Delta Lake per batch"),
+    ("run3-delta-per-trace-s3-rate", "Delta Lake per trace"),
+    ("run3-lance-per-batch-s3-rate", "Lance per batch"),
+    ("run3-lance-per-trace-s3-rate", "Lance per trace"),
     ("files-s3-rate", "Parquet files on S3"),
+    ("run3-vortex-s3-rate", "Vortex files on S3"),
 ]
+# The run3 rate runs were made at the same time on one instance; every earlier row had an instance to itself.
+SHARED_INSTANCE_RUN = "run3-"
+SHARED_INSTANCE_NOTE = ("The Delta Lake, Lance and Vortex rows ran at the same time on one instance, so their times "
+                        "include contention with each other.")
 PIPELINE_PANELS = [
     ("commit_p50_ms", "Write one batch (median)"),
     ("finalize_max_ms", "Close a trace (slowest)"),
@@ -205,7 +214,7 @@ def pipeline_svg(rows, dark=False):
     title = "One pipeline flow at 1.25 batches per second"
     subtitle = "Single run each, 16 workers, 5,000 rows per batch, batch data on S3. Shorter bars are faster."
     label_x, panel_x, pitch, scale_w = 16, 232, 208, 138
-    row_top, row_h, bar_h = 98, 46, 16
+    row_top, row_h, bar_h = 98, 38, 16
     values = [row[key] for row in rows for key, _ in PIPELINE_PANELS]
     lo, hi = 10 ** math.floor(math.log10(min(values))), 10 ** math.ceil(math.log10(max(values)))
     if lo == hi:
@@ -249,14 +258,17 @@ def pipeline_svg(rows, dark=False):
     usual = Counter(row.get("batches_committed") for row in rows).most_common(1)[0][0] if rows else None
     for row in rows:
         if usual and row.get("batches_committed") not in (None, usual):
-            notes.append(f"{row['label']} ran {row['batches_committed']:,} batches; the others ran {usual:,}.")
-    body.append(_text(label_x, rows_bottom + 46, " ".join(notes), theme["ink2"], size=11.5))
+            notes[0] += f" {row['label']} ran {row['batches_committed']:,} batches; the others ran {usual:,}."
+    if any(row["name"].startswith(SHARED_INSTANCE_RUN) for row in rows):
+        notes.append(SHARED_INSTANCE_NOTE)
+    for n, note in enumerate(notes):  # one line each: together they are wider than the chart
+        body.append(_text(label_x, rows_bottom + 46 + 17 * n, note, theme["ink2"], size=11.5, cls="note"))
     desc = "Three panels of horizontal bars on a shared log scale. " + " ".join(
         f"{row['label']}: " + ", ".join(f"{t.lower()} {human_ms(row[k])}" for k, t in PIPELINE_PANELS)
         + (f", fell behind schedule at {row['batches_per_s']:.2f} batches per second"
            if row["batches_per_s"] < ON_SCHEDULE_BATCHES_PER_S else "") + "."
-        for row in rows)
-    return _document(rows_bottom + 62, title, subtitle, desc, theme, body)
+        for row in rows) + "".join(" " + note for note in notes[1:])
+    return _document(rows_bottom + 45 + 17 * len(notes), title, subtitle, desc, theme, body)
 
 
 def main(results_dir=ROOT / "results", out_dir=ROOT / "docs" / "img"):

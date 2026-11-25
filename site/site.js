@@ -269,7 +269,7 @@ function verifiedCell(r) {
 
 function pipelineRow(r, cols) {
   const cell = (i, cls, ...kids) => h("td", { class: cls, "data-label": cols[i] }, ...kids.flat());
-  const name = h("th", { scope: "row", class: "sysname" }, r.option, small(r.backing_label || r.backing || ""));
+  const name = h("th", { scope: "row", class: "sysname" }, r.option, small(r.backing_label || r.backing || ""), r.note ? small(r.note) : null);
   if (r.failed != null) return h("tr", {}, name, h("td", { colspan: cols.length - 1 }, flag("Run failed"), small(r.failed)));
   const lost = r.batches_failed > 0;
   return h("tr", { class: r.kept_up === false || r.all_verified === false || lost ? "trouble" : null }, name,

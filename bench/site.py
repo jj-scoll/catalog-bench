@@ -5,7 +5,8 @@ tables-per-writer where a result states them) and writer count. Runs that share 
 those are repetitions. Unknown keys are ignored and missing ones become null.
 
 Pipeline workload files (results/pipeline/ec2-<option>-<backing>-<shape>.json) are kept apart under "pipeline": one
-row per run, grouped by run shape. The backing and the shape are only in the file name.
+row per run, grouped by run shape. The backing and the shape are only in the file name. A later set of runs puts a
+tag after "ec2-" (ec2-run3-<option>-<backing>-<shape>.json), which is kept as the row's "run".
 """
 
 import argparse
@@ -23,7 +24,10 @@ VARIANTS = {"client": "client: {}", "tables_per_writer": "tables per writer: {}"
 BACKINGS = {
     "aurora-prov": "Aurora PostgreSQL, provisioned", "aurora-sv2": "Aurora Serverless v2", "s3tables": "Amazon S3 Tables",
     "sql": "Iceberg SQL catalog on Postgres", "lakekeeper": "Lakekeeper", "polaris": "Polaris",
-    "local-postgres": "Postgres on the runner", "files-s3": "plain Parquet on S3",
+    "local-postgres": "Postgres on the runner", "s3": "S3, no catalog",
+}
+RUN_NOTES = {  # (run tag, shape) -> how those runs were made, where it differs from one option per instance
+    ("run3", "rate"): "ran at the same time as five other options on one instance",
 }
 SHAPES = {  # in page order: name, then traces, batches per trace and batches per second asked for when a file does not say
     "rate": ("Steady rate", 6, 300, 1.25), "burst": ("Burst", 6, 1500, 12.5), "ceiling": ("Ceiling", 4, 500, None),
@@ -108,9 +112,12 @@ def _pipeline_run(path, doc, r):
     stem, option = path.stem, r["option"]
     shape = _suffix(stem, SHAPES) or stem.rpartition("-")[2]
     rest = stem.removesuffix(shape).rstrip("-")
-    backing = _suffix(rest, BACKINGS) or rest.partition("-")[2].removeprefix(option).strip("-") or rest
+    tag = re.match(r"[^-]+-(run\d+)-", rest)
+    named = rest.partition("-")[2].removeprefix(tag[1] if tag else "").strip("-")
+    backing = _suffix(rest, BACKINGS) or named.removeprefix(option).strip("-") or rest
     run = {"file": path.name, "option": option, "backing": backing, "backing_label": BACKINGS.get(backing, backing),
-           "shape": shape, **{k: _num(r.get(k)) for k in PIPELINE_KEYS}}
+           "shape": shape, "run": tag[1] if tag else None, "note": RUN_NOTES.get((tag[1], shape)) if tag else None,
+           **{k: _num(r.get(k)) for k in PIPELINE_KEYS}}
     for k in ("verified", "reprocess_verified", "verified_after_maintain"):
         run[k] = r[k] if isinstance(r.get(k), bool) else None
     run["failed"] = str(r["failed"]) if "failed" in r else None
@@ -151,7 +158,7 @@ def build_pipeline(directory):
 
     shapes = []
     for shape in [*SHAPES, *sorted({r["shape"] for r in runs} - set(SHAPES))]:
-        mine = sorted((r for r in runs if r["shape"] == shape), key=lambda r: (r["option"], r["backing"]))
+        mine = sorted((r for r in runs if r["shape"] == shape), key=lambda r: (r["option"], r["backing"], r["run"] or ""))
         if not mine:
             continue
         name, *load = SHAPES.get(shape, (shape, None, None, None))

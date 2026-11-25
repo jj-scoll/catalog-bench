@@ -50,13 +50,39 @@ def test_backing_and_shape_come_from_the_file_name(tmp_path):
     assert [(r["option"], r["backing"], r["backing_label"]) for r in shapes["rate"]["runs"]] == [
         ("ducklake", "aurora-prov", "Aurora PostgreSQL, provisioned"),
         ("ducklake", "local-postgres", "Postgres on the runner"),
-        ("files", "files-s3", "plain Parquet on S3"),
+        ("files", "s3", "S3, no catalog"),
     ]
     assert shapes["big"]["runs"][0]["backing_label"] == "Aurora Serverless v2"
     assert shapes["big"]["runs"][0]["file"] == "ec2-ducklake-aurora-sv2-big.json"
     assert shapes["rate-small"]["runs"][0]["backing_label"] == "Amazon S3 Tables"
     assert shapes["ceiling"]["runs"][0]["backing_label"] == "Iceberg SQL catalog on Postgres"
     assert {"half-rate", "ceiling-small"} <= set(shapes)
+
+
+def test_a_run_tag_in_the_file_name_is_not_the_option_the_backing_or_the_shape(tmp_path):
+    new = ["vortex", "delta-per-trace", "delta-per-batch", "lance-per-trace", "lance-per-batch"]
+    _write(tmp_path, "ec2-files-s3-rate.json", [_run("files")])
+    for option in ["files", *new]:
+        _write(tmp_path, f"ec2-run3-{option}-s3-rate.json", [_run(option)])
+    _write(tmp_path, "ec2-run3-lance-per-batch-s3-ceiling.json", [_run("lance-per-batch", target_batches_per_s=None)])
+    _write(tmp_path, "ec2-run9-ducklake-newstore-rate.json", [_run()])
+    shapes = _shapes(tmp_path)
+    assert list(shapes) == ["rate", "ceiling"]
+    rate = shapes["rate"]["runs"]
+    assert [(r["option"], r["backing"], r["backing_label"], r["run"]) for r in rate] == [
+        ("delta-per-batch", "s3", "S3, no catalog", "run3"),
+        ("delta-per-trace", "s3", "S3, no catalog", "run3"),
+        ("ducklake", "newstore", "newstore", "run9"),
+        ("files", "s3", "S3, no catalog", None),  # the earlier run comes first
+        ("files", "s3", "S3, no catalog", "run3"),
+        ("lance-per-batch", "s3", "S3, no catalog", "run3"),
+        ("lance-per-trace", "s3", "S3, no catalog", "run3"),
+        ("vortex", "s3", "S3, no catalog", "run3"),
+    ]
+    assert all("one instance" in r["note"] for r in rate if r["run"] == "run3")
+    assert [r["note"] for r in rate if r["run"] != "run3"] == [None, None]
+    (ceiling,) = shapes["ceiling"]["runs"]
+    assert (ceiling["option"], ceiling["backing"], ceiling["run"], ceiling["note"]) == ("lance-per-batch", "s3", "run3", None)
 
 
 def test_shape_load_is_read_from_the_runs_and_falls_back_to_the_known_shape(tmp_path):
