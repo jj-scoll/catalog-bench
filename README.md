@@ -66,6 +66,36 @@ export SSL_CERT_FILE="$(uv run python -m certifi)"
 export AWS_CA_BUNDLE="$SSL_CERT_FILE" CURL_CA_BUNDLE="$SSL_CERT_FILE"
 ```
 
+## Pipeline workload
+
+The commit ramp isolates one call. `bench.pipeline` runs a whole write-and-read flow instead, the kind a batch pipeline has, against a storage option:
+
+1. A load arrives as traces, each split into batches. Workers write one batch at a time: output rows and a few error rows. With `--rate` the batches arrive on a schedule whether or not the workers keep up, and the run reports how far behind they fell.
+2. A separate reader looks for sampled batches as soon as they are acknowledged, which measures how long a batch takes to become readable.
+3. When a trace's batches are in, a finaliser closes it.
+4. A reader loads every trace and the rows are compared with what was acknowledged: missing, duplicated and left-over rows are counted.
+5. One trace is reprocessed under a new version with half its batches. Afterwards a reader must see only the new version.
+6. If the option has maintenance (compaction), it runs, and the reads are repeated.
+
+Delivery is at least once: a failed write is delivered again, up to three times, and `--redeliver-every N` delivers every Nth batch twice.
+
+```sh
+docker compose up -d --wait
+uv run python -m bench.pipeline --options files ducklake iceberg-per-batch iceberg-per-trace \
+  --traces 4 --batches 100 --rows 1000 --workers 8 --rate 5 --redeliver-every 20 --out results/pipeline/local.json
+```
+
+| Option | A batch is | Closing a trace is |
+|---|---|---|
+| `files` | one Parquet file at a fixed key, no catalog | writing a small control object |
+| `ducklake` | one DuckLake transaction | one transaction: delete older versions, record the new one |
+| `iceberg-per-batch` | two Iceberg commits (output, errors) | three commits: two deletes and a control row |
+| `iceberg-per-trace` | plain Parquet files outside the table | two commits that replace the trace's rows in the tables |
+
+The two Iceberg options run on any Iceberg system in `bench/systems`, chosen with `BENCH_ICEBERG_CATALOG` (`iceberg-sql-postgres`, `s3-tables`, `lakekeeper` or `polaris`). `ducklake` uses the Postgres in `BENCH_PG`. `BENCH_PIPELINE_DATA` is where `files`, `ducklake` and the `iceberg-per-trace` files go: a local directory or an `s3://` URI.
+
+To add an option, copy `bench/options/files.py`; the interface is at the top of `bench/options/__init__.py`. Each option's docstring states what it does at every step, and that text is saved with the results.
+
 ## Add a system
 
 Copy `bench/systems/postgres.py` to a new file in the same directory and edit it. Any module there with a `System` class is registered automatically. The interface is five things, documented at the top of `bench/systems/__init__.py`:
