@@ -23,6 +23,7 @@ All figures are acknowledged commits per second.
 What this run does not show:
 
 - For the three Iceberg rows the Python client (pyiceberg) and its object writes take most of each commit, so these are rates for that client, not ceilings for the catalogs. A catalog-only workload is planned.
+- The DuckLake row is not like for like with the Iceberg rows. With default settings DuckLake keeps a single-row insert inline in the catalog database and writes no Parquet file, so its commit is one Postgres transaction. The Iceberg rows write data and metadata files on every commit. A DuckLake run with inlining turned off is planned.
 - The Iceberg SQL ramp stopped at 16 writers and the DuckLake ramp at 32, because the machine's time budget ran out. A single DuckLake run at 64 writers (164 commits per second) is left out for having no repetitions.
 - Error messages in the published files have long numeric identifiers replaced with `<id>`.
 

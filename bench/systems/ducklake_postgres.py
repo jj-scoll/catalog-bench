@@ -10,7 +10,7 @@ from bench.config import DATA_PATH, PG
 
 @dataclass
 class System:
-    """DuckLake, default settings: metadata in Postgres, Parquet data on local disk, one single-row INSERT per commit."""
+    """DuckLake, default settings: metadata in Postgres, one single-row INSERT per commit. DuckLake keeps a row this small inline in the catalog, so no Parquet file is written."""
 
     attach: str = f"ATTACH 'ducklake:postgres:{PG} dbname=ducklake' AS lake (DATA_PATH '{DATA_PATH}')"
     name = "ducklake-postgres"
