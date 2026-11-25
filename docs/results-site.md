@@ -11,7 +11,7 @@ python3 -m http.server 8000 --directory site   # then open http://localhost:8000
 
 Each environment gets its own ranking; runs shorter than 30 seconds or with a single repetition are shown but labelled as not comparable. `site/data.json` is generated, so it is not committed.
 
-The site shows both workloads. The comparability labels above apply to the commit-rate workload; every pipeline row is a single run and is shown as such. The pipeline figures are also tabulated in [pipeline.md](pipeline.md).
+The site shows both workloads. The comparability labels above apply to the commit-rate workload; every pipeline row is a single run and is shown as such, and a set that was repeated shows a row for each repeat. The pipeline figures are also tabulated in [pipeline.md](pipeline.md).
 
 ## Automation
 

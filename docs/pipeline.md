@@ -29,6 +29,8 @@ Delivery is at least once: a failed write is delivered again, up to three times,
 | `ducklake` | one DuckLake transaction | one transaction: delete older versions, record the new one |
 | `iceberg-per-batch` | two Iceberg commits (output, errors) | three commits: two deletes and a control row |
 | `iceberg-per-trace` | plain Parquet files outside the table | two commits that replace the trace's rows in the tables |
+| `iceberg-duckdb-per-batch` | the same two commits as `iceberg-per-batch`, made by DuckDB's iceberg extension | the same three commits, made by DuckDB |
+| `iceberg-duckdb-per-trace` | plain Parquet files outside the table | one DuckDB transaction per table that replaces the trace's rows |
 | `vortex` | one Vortex file per delivery at its own key, no catalog, written and read through DuckDB | writing a small control object |
 | `delta-per-batch` | two Delta Lake commits (output, errors) through delta-rs, no catalog | three commits: two deletes and a control row |
 | `delta-per-trace` | plain Parquet files outside the table | two commits that replace the trace's rows in the tables |
@@ -79,12 +81,14 @@ Every published run used 5,000 rows per batch, 16 workers, and delivered every 5
 | rate-small | 3 × 300 | paced at 1.25 batches/s |
 | half-rate | 3 × 200 | paced at 0.63 batches/s |
 | ceiling-small | 2 × 150 | unpaced |
+| rate-short | 2 × 300 | paced at 1.25 batches/s |
+| ceiling-short | 2 × 250 | unpaced |
 
 Because every 50th batch is delivered twice, a paced run that keeps to its schedule shows `batches_per_s` about 2% above the target: 1.28 for a 1.25 target and 12.75 for 12.5. The rate is taken over the whole load including closing the traces, so an option with slow closes can read a little under that while still on schedule: `iceberg-per-trace` on S3 Tables reads 1.27 and 12.08 with no batch more than 2 ms late.
 
 ## Results
 
-All runs are from 2026-11-25 on an EC2 c6id.4xlarge (16 vCPUs) in ca-central-1. **Each row is a single run.** There are no repetitions, so treat small differences as noise. The files are in `results/pipeline/`, one per run, named for the option, what backed it and the shape.
+All runs are from 2026-11-25 on an EC2 c6id.4xlarge (16 vCPUs) in ca-central-1. **Each row is a single run.** There are no repetitions except in the fourth set below, so treat small differences as noise. The files are in `results/pipeline/`, one per run, named for the option, what backed it and the shape.
 
 The files named `ec2-run3-...` are a third set of runs, made on one instance with batch data on S3 in the same region: `files` again as a reference, and `vortex`, `delta-per-trace`, `delta-per-batch`, `lance-per-trace` and `lance-per-batch`. They are marked † below. **The six † rate runs ran at the same time on that one instance** (their result files were written within 45 seconds of each other), so their timings include contention with each other. The † ceiling runs ran one at a time. Every row without a † had an instance to itself.
 
@@ -166,16 +170,55 @@ From the third set of runs (†). The rate figures include contention between th
 - **The rerun of `files` came out close to the first run**: batch write 358 ms against 342 ms, trace read 5.9 s against 5.7 s. It started batches up to 116 ms late where the first run was under 1 ms late. All six † rate runs were between 5 and 185 ms late at worst; sharing the instance is the likely cause, and it was not isolated.
 - **DuckLake on Aurora is still far faster to close a trace** (82 to 87 ms at the rate shape) than any option here that keeps a table without a database.
 
+### Fourth set: DuckDB against pyiceberg on S3 Tables, with repeats
+
+The files named `ec2-run4-...` are a fourth set, also from 2026-11-25. Each option had its own c6id.4xlarge and ran the two short shapes three times each, alternating paced and unpaced. Each file holds the three repeats of one option at one shape. The cells below are the median of the three, with the lowest and highest in brackets where they differ.
+
+The two `iceberg-duckdb-*` options use the same tables and steps as the pyiceberg ones, with DuckDB 2.0.1's iceberg extension doing every write and read. DuckDB does not retry a commit conflict, so the option retries with the pyiceberg limits (10 tries).
+
+rate-short, paced at 1.25 batches/s:
+
+| Option | Backing | Batches/s | Latest start, ms | Batch write p50, ms | Batch write p95, ms | Slowest close, s | Trace read p50, s | Failed writes | Verified |
+|---|---|---|---|---|---|---|---|---|---|
+| `files` | S3, no catalog | 1.3 | <1 | 369 (367 to 370) | 577 (569 to 598) | 0.30 (0.30 to 0.33) | 4.00 (3.92 to 4.38) | 0 | yes |
+| `iceberg-per-trace` | Amazon S3 Tables | 1.3 | <1 | 366 (366 to 367) | 626 (594 to 632) | 9.37 (9.27 to 9.64) | 0.28 (0.27 to 0.30) | 0 | yes |
+| `iceberg-duckdb-per-trace` | Amazon S3 Tables | 1.3 | <1 | 366 (364 to 367) | 608 (593 to 614) | 8.80 (8.68 to 8.83) | 0.27 (0.27 to 0.29) | 0 | yes |
+| `iceberg-per-batch` | Amazon S3 Tables | 1.2 | 2,255 (1,983 to 2,290) | 4,429 (4,216 to 4,628) | 19,738 (19,275 to 21,722) | 26.36 (26.30 to 27.85) | 2.14 (2.13 to 2.19) | 0 | yes |
+| `iceberg-duckdb-per-batch` | Amazon S3 Tables | 1.3 | <1 | 549 (548 to 550) | 3,645 (1,060 to 6,165) | 0.73 (0.70 to 0.88) | 0.61 (0.60 to 0.68) | 0 | yes |
+| `delta-per-batch` | S3, no catalog | 1.3 | <1 | 588 (586 to 589) | 1,100 (1,100 to 1,103) | 0.97 (0.93 to 0.98) | 1.46 (1.45 to 1.48) | 0 | yes |
+
+ceiling-short, unpaced:
+
+| Option | Backing | Batches/s | Batch write p50, ms | Batch write p95, ms | Slowest close, s | Trace read p50, s | Failed writes | Verified |
+|---|---|---|---|---|---|---|---|---|
+| `files` | S3, no catalog | 39.8 (38.5 to 40.4) | 359 (351 to 370) | 620 (596 to 639) | 0.32 (0.28 to 0.39) | 3.22 (3.18 to 3.25) | 0 | yes |
+| `iceberg-per-trace` | Amazon S3 Tables | 22.4 (22.3 to 22.6) | 363 (356 to 365) | 669 (652 to 687) | 8.17 (8.15 to 8.49) | 0.25 | 0 | yes |
+| `iceberg-duckdb-per-trace` | Amazon S3 Tables | 24.3 (23.3 to 24.3) | 361 (358 to 372) | 649 (643 to 678) | 7.39 (7.35 to 7.57) | 0.22 (0.20 to 0.23) | 0 | yes |
+| `iceberg-per-batch` | Amazon S3 Tables | 1.4 | 8,568 (8,253 to 8,793) | 24,652 (24,059 to 25,830) | 23.53 (22.80 to 23.61) | 1.36 (0.71 to 1.36) | 0 | yes |
+| `iceberg-duckdb-per-batch` | Amazon S3 Tables | 2.5 | 3,915 (3,776 to 4,471) | 19,487 (18,606 to 19,834) | 0.64 (0.52 to 0.76) | 0.55 (0.51 to 0.57) | 1 (0 to 1) | yes |
+| `delta-per-batch` | S3, no catalog | 6.4 (6.3 to 6.4) | 1,671 (1,658 to 1,698) | 7,372 (6,449 to 7,420) | 1.05 (0.93 to 1.17) | 1.27 (1.24 to 1.30) | 0 | yes |
+
+- **With one commit per trace, the library made little difference.** Unpaced, DuckDB wrote 24.3 batches/s and pyiceberg 22.4, and the slowest close was 7.4 s against 8.2 s.
+- **With a commit on every batch, DuckDB kept to 1.25 batches/s and pyiceberg did not.** DuckDB's batch write took 549 ms at the median and no batch started late. pyiceberg's took 4.4 s and batches started up to 2.3 s late.
+- **A commit on every batch was still slow on S3 Tables with 16 workers.** Unpaced, DuckDB wrote 2.5 batches/s and pyiceberg 1.4, against 6.4 for `delta-per-batch`.
+- **Closing a trace took 23 to 28 s with `iceberg-per-batch` and under 1 s with `iceberg-duckdb-per-batch`.**
+- **`delta-per-batch` now has an unpaced result.** All three repeats finished with no failed write, after the change that opens each Delta table once per process.
+- **pyiceberg spent most of `iceberg-per-batch` on commit conflicts.** Its logs show about 4,500 conflicted commits in the first paced run and about 6,700 in the first unpaced run. All were retried within the 10 tries, so the files record no failed write. After each conflict pyiceberg tried to delete its unused files and S3 Tables refused, which adds calls to every retry.
+- **The failed write under `iceberg-duckdb-per-batch` was a batch that conflicted on all 10 tries**, in two of the three unpaced runs. It was written again and committed.
+
 ## Known gaps
 
-- Every figure here is from one run.
+- Every figure outside the fourth set is from one run. The fourth set has three repeats, all within one hour.
+- The fourth set's shapes are shorter than the others (two traces), so its rows are not directly comparable with the six-trace and four-trace rows.
+- The result files do not count commit conflicts that were retried successfully. The pyiceberg counts above come from its logs, and DuckDB's retries were not logged, so the two cannot be compared on conflicts.
+- In the fourth set's unpaced runs the freshness reader skipped 40 to 80% of its samples for most options, so the "visible after" figures in those files cover only the samples it reached in time.
 - The six † rate runs ran at the same time on one instance, so they competed for its CPU and network, and the rows without a † did not. A small gap between a † row and another row is not a difference between options.
-- `delta-per-batch` has no ceiling result. With the pacing removed, delta-rs timed out fetching instance credentials from the instance metadata service, and closing a trace failed. The option opens the table on every call and each open loads credentials. It was not a commit conflict. Two attempts ended the same way; the cause was read from the second, which had extra logging. The option now keeps one open table per process, but that change has not been run on S3, so the result is still missing.
+- `delta-per-batch` has no ceiling result in the third set; the fourth set has one at the shorter shape. With the pacing removed, delta-rs timed out fetching instance credentials from the instance metadata service, and closing a trace failed. The option opens the table on every call and each open loads credentials. It was not a commit conflict. Two attempts ended the same way; the cause was read from the second, which had extra logging. The option now keeps one open table per process, but that change has not been run on S3, so the result is still missing.
 - In the run above the harness carried on to the read step after the failed close and reported a DuckDB `BinderException` from there. It now stops with the close error instead.
 - How Delta Lake and Lance arbitrate concurrent commits on S3 in this setup was not examined. No lock table was used. The runs verified, which says no row was lost, duplicated or left stale in these runs and nothing more general.
 - The Delta Lake, Lance and Vortex options were run only at the rate and ceiling shapes, and only with no catalog service.
 - `vortex` and `files` use different readers (DuckDB and pyarrow), so the difference in their read times is not the file format alone.
-- The Iceberg options cannot yet reset Lakekeeper or Polaris for a second run, so those two have one run each, at the rate shape.
+- When these runs were made the Iceberg options could not reset Lakekeeper or Polaris for a second run, so those two have one run each, at the rate shape. The reset has since been fixed.
 - `iceberg-per-batch` on S3 Tables was run only at the three smaller shapes, so it is not directly comparable with the six-trace rate runs.
 - The result files do not record the Aurora instance class or capacity setting, or where the batch data files were written for the catalog-backed options. The `files`, `vortex`, Delta Lake and Lance runs record S3. The Aurora sizes in the table above and the data locations below come from the run setup, not from the files. The capacity Serverless v2 actually used during a run was not recorded.
 - **Batch data did not go to the same place in every run.** The `s3`, `aurora-prov`, `aurora-sv2` and `s3tables` runs wrote batch data to S3. The `local-postgres`, `sql`, `lakekeeper` and `polaris` runs wrote it to the runner's instance-store NVMe (through RustFS for Lakekeeper and Polaris). The fast batch commits of `iceberg-per-trace` on the SQL catalog, Lakekeeper and Polaris (about 3 ms) are local disk writes, and are not comparable with the 341 ms S3 writes on the S3 Tables run. The same applies to DuckLake's 15.6 ms on local Postgres against 94 ms on Aurora.

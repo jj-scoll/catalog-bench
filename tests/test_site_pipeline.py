@@ -144,6 +144,22 @@ def test_options_carry_the_descriptions_and_versions_the_files_state(tmp_path):
     assert data["environments"] == ["lab"] and data["machines"] == [{"cpus": 16}] and data["ran_at"] == ["2026-01-02T00:00:00+00:00"]
 
 
+def test_a_file_of_repeats_gives_one_row_per_repeat_under_its_own_shape(tmp_path):
+    short = {"traces": 2, "target_batches_per_s": None, "batches_per_trace": 250}
+    _write(tmp_path, "ec2-run4-iceberg-duckdb-per-batch-s3tables-rate-short.json", [_run("iceberg-duckdb-per-batch", traces=2) for _ in range(3)])
+    _write(tmp_path, "ec2-run4-iceberg-duckdb-per-batch-s3tables-ceiling-short.json", [_run("iceberg-duckdb-per-batch", **short) for _ in range(3)])
+    _write(tmp_path, "ec2-run4-files-s3-ceiling-short.json", [_run("files", **short) for _ in range(3)])
+    _write(tmp_path, "ec2-iceberg-per-batch-s3tables-ceiling-small.json", [_run("iceberg-per-batch")])
+    shapes = _shapes(tmp_path)
+    assert list(shapes) == ["ceiling-small", "rate-short", "ceiling-short"]
+    assert (shapes["rate-short"]["name"], shapes["ceiling-short"]["name"]) == ("Steady rate, two traces", "Ceiling, two traces")
+    assert (shapes["ceiling-short"]["traces"], shapes["ceiling-short"]["batches_per_trace"], shapes["ceiling-short"]["target_batches_per_s"]) == (2, 250, None)
+    rows = [(r["option"], r["backing_label"], r["run"], r["note"]) for r in shapes["ceiling-short"]["runs"]]
+    assert rows == [("files", "S3, no catalog", "run4", "one of three repeats")] * 3 + [
+        ("iceberg-duckdb-per-batch", "Amazon S3 Tables", "run4", "one of three repeats")] * 3
+    assert len(shapes["rate-short"]["runs"]) == 3 and shapes["ceiling-small"]["runs"][0]["note"] is None
+
+
 def test_main_writes_the_pipeline_section(tmp_path, capsys):
     _write(tmp_path, "ec2-ducklake-sql-rate.json", [_run()])
     out = tmp_path / "site" / "data.json"

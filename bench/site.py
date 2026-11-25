@@ -28,11 +28,13 @@ BACKINGS = {
 }
 RUN_NOTES = {  # (run tag, shape) -> how those runs were made, where it differs from one option per instance
     ("run3", "rate"): "ran at the same time as five other options on one instance",
+    ("run4", "rate-short"): "one of three repeats", ("run4", "ceiling-short"): "one of three repeats",
 }
 SHAPES = {  # in page order: name, then traces, batches per trace and batches per second asked for when a file does not say
     "rate": ("Steady rate", 6, 300, 1.25), "burst": ("Burst", 6, 1500, 12.5), "ceiling": ("Ceiling", 4, 500, None),
     "big": ("One big trace", 1, 9000, None), "rate-small": ("Steady rate, smaller load", 3, 300, 1.25),
     "half-rate": ("Half rate", 3, 200, 0.63), "ceiling-small": ("Ceiling, smaller load", 2, 150, None),
+    "rate-short": ("Steady rate, two traces", 2, 300, 1.25), "ceiling-short": ("Ceiling, two traces", 2, 250, None),
 }
 BEHIND_LIMIT_MS = 1000  # a paced run whose latest batch started later than this fell behind
 PIPELINE_KEYS = (

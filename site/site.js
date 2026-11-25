@@ -301,7 +301,7 @@ function renderPipeline(p) {
       h("p", { class: "sub" }, shapeLoad(shape) + " " + (trouble ? `${plural(trouble, "run")} of ${int(shape.runs.length)} had a problem, marked in the row.` : `${shape.runs.length === 1 ? "The run" : "All " + int(shape.runs.length) + " runs"} ${isNum(shape.target_batches_per_s) ? "kept up and verified" : "verified"}.`)),
       h("div", { class: "scroll", tabindex: 0, role: "region", "aria-labelledby": id },
         h("table", { class: "pipeline" },
-          h("caption", {}, `${shape.name}: one row per option and backing. Each row is a single run.`),
+          h("caption", {}, `${shape.name}: one row per run. Each row is a single run; an option that was repeated has a row for each repeat.`),
           h("thead", {}, h("tr", {}, ...cols.map((c, i) => h("th", { scope: "col", class: i >= 2 && i <= 5 ? "n" : null }, c)))),
           h("tbody", {}, ...shape.runs.map((r) => pipelineRow(r, cols))))));
   }));
