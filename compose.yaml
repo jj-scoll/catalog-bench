@@ -1,0 +1,123 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_PASSWORD: bench
+    ports:
+      - "55432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 1s
+      retries: 30
+
+  # One database per REST catalog in the Postgres above. Polaris never creates its own schema, so that is done here too.
+  catalog-dbs:
+    image: postgres:18
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGPASSWORD: bench
+    entrypoint: /bin/sh
+    command:
+      - -ec
+      - |
+        for db in lakekeeper polaris; do
+          psql -tAc "SELECT 1 FROM pg_database WHERE datname = '$$db'" | grep -q 1 || psql -c "CREATE DATABASE $$db"
+        done
+        psql -d polaris -c "CREATE SCHEMA IF NOT EXISTS polaris_schema"
+
+  # S3-compatible object store holding both catalogs' table data. The image runs as uid 10001, hence the chown step.
+  rustfs-perms:
+    image: rustfs/rustfs:1.0.6
+    user: "0:0"
+    restart: "no"
+    volumes:
+      - ./.data/rustfs:/data
+    entrypoint: ["chown", "-R", "10001:10001", "/data"]
+
+  rustfs:
+    image: rustfs/rustfs:1.0.6
+    depends_on:
+      rustfs-perms:
+        condition: service_completed_successfully
+    environment:
+      RUSTFS_ACCESS_KEY: bench
+      RUSTFS_SECRET_KEY: benchbench
+      # Same port inside and outside, so one endpoint URL works for the host and for Lakekeeper (see below).
+      RUSTFS_ADDRESS: ":59000"
+      RUSTFS_VOLUMES: /data
+    volumes:
+      - ./.data/rustfs:/data
+    ports:
+      - "59000:59000"
+      - "58181:8181" # Lakekeeper, which shares this network namespace
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:59000/health"]
+      interval: 1s
+      retries: 60
+
+  lakekeeper-migrate:
+    image: quay.io/lakekeeper/catalog:v0.15.1
+    depends_on:
+      catalog-dbs:
+        condition: service_completed_successfully
+    restart: "no"
+    environment: &lakekeeper-env
+      LAKEKEEPER__PG_ENCRYPTION_KEY: This-is-NOT-Secure!
+      LAKEKEEPER__PG_DATABASE_URL_READ: postgresql://postgres:bench@postgres:5432/lakekeeper
+      LAKEKEEPER__PG_DATABASE_URL_WRITE: postgresql://postgres:bench@postgres:5432/lakekeeper
+    command: ["migrate"]
+
+  lakekeeper:
+    image: quay.io/lakekeeper/catalog:v0.15.1
+    depends_on:
+      lakekeeper-migrate:
+        condition: service_completed_successfully
+      rustfs:
+        condition: service_healthy
+    # Lakekeeper hands clients the same S3 endpoint it uses itself. Sharing the object store's network namespace
+    # makes http://localhost:59000 that endpoint for both the server and a client on the host.
+    network_mode: service:rustfs
+    environment: *lakekeeper-env
+    command: ["serve"]
+    healthcheck:
+      test: ["CMD", "/home/nonroot/lakekeeper", "healthcheck"]
+      interval: 1s
+      retries: 60
+
+  polaris-bootstrap:
+    image: apache/polaris-admin-tool:1.9.0
+    depends_on:
+      catalog-dbs:
+        condition: service_completed_successfully
+    restart: "no"
+    environment: &polaris-env
+      POLARIS_PERSISTENCE_TYPE: relational-jdbc
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/polaris
+      QUARKUS_DATASOURCE_USERNAME: postgres
+      QUARKUS_DATASOURCE_PASSWORD: bench
+    command: ["bootstrap", "--realm=POLARIS", "--credential=POLARIS,root,s3cr3t"]
+
+  polaris:
+    image: apache/polaris:1.9.0
+    depends_on:
+      polaris-bootstrap:
+        condition: service_completed_successfully
+      rustfs:
+        condition: service_healthy
+    environment:
+      <<: *polaris-env
+      POLARIS_REALM_CONTEXT_REALMS: POLARIS
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: bench
+      AWS_SECRET_ACCESS_KEY: benchbench
+    ports:
+      - "58182:8181"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8182/q/health"]
+      interval: 2s
+      retries: 60

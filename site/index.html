@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>catalog-bench: commits per second into lakehouse catalogs</title>
+<meta name="description" content="An open benchmark of single-row commits per second into lakehouse catalogs from concurrent writers.">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<header class="masthead">
+  <p class="wordmark">catalog-bench</p>
+  <h1>How many commits per second does a lakehouse catalog accept, and what happens to writers when several commit at once?</h1>
+  <p class="lede">An open benchmark: one small file per system, one results format, and every number here rebuilt from the result files in the repository.</p>
+</header>
+
+<div class="scope" id="scope">
+  <label for="env">Environment</label>
+  <select id="env"></select>
+  <p class="notice" id="notice" hidden></p>
+</div>
+
+<main id="main">
+  <p class="empty" id="status">Loading results.</p>
+
+  <section id="scaling" hidden>
+    <h2>Commits per second as writers are added</h2>
+    <p class="sub" id="scaling-sub"></p>
+    <div class="legend" id="legend"></div>
+    <div class="chart" id="chart"></div>
+    <ul class="readout" id="scaling-readout"></ul>
+    <details class="tableview">
+      <summary>Show these numbers as a table</summary>
+      <div class="scroll" id="scaling-table"></div>
+    </details>
+  </section>
+
+  <section id="leaderboard" hidden>
+    <h2>Leaderboard for this environment</h2>
+    <p class="sub">Peak is the median commits per second across repetitions at the writer count where that median is highest. The other columns describe the same writer count. Catalog call share is the part of the median commit time spent in the catalog call, for systems that report it; the rest is spent in the client. Verified means every acknowledged commit was found afterwards, in every run.</p>
+    <div id="board"></div>
+  </section>
+
+  <section id="fairness" hidden>
+    <h2>Do all writers get a turn?</h2>
+    <p class="sub">Each bar runs from the writer that got the fewest commits to the one that got the most, on a scale from zero to the most. A short bar at the right end means the writers shared evenly; a long bar means some were starved. Compare the slowest commit with the median beside it.</p>
+    <p class="callout" id="fairness-callout" hidden></p>
+    <div class="fair-grid" id="fair"></div>
+  </section>
+
+  <section id="systems" hidden>
+    <h2>What each entry measures</h2>
+    <div id="detail"></div>
+  </section>
+
+  <section id="method" class="prose">
+    <h2>Method</h2>
+    <p>N writer processes each open their own connection and commit one single-row insert at a time, as fast as the system acknowledges them, for a fixed period. A commit counts only when the client was told it succeeded.</p>
+    <p>A run is marked verified when the rows found afterwards equal the acknowledged commits, allowing for failed commits that landed anyway.</p>
+    <p>Single-row commits are the worst case for a catalog on purpose: they isolate commit cost from data volume. Batched and multi-table workloads are planned.</p>
+    <p>Results from a workstation or a shared CI runner are noisy. Compare systems within one run on one machine, not across machines. That is why each environment here has its own ranking, and why runs shorter than 30 seconds or with a single repetition are labelled as not comparable.</p>
+    <p>The Python client's cost is negligible for the systems measured so far (checked against <code>pgbench</code> for Postgres). That has not been checked for Iceberg clients.</p>
+    <p id="ceiling" hidden></p>
+  </section>
+
+  <section id="add" class="prose">
+    <h2>Add your catalog</h2>
+    <p>Copy <code>bench/systems/postgres.py</code> to a new file in the same directory and edit it. Any module there with a <code>System</code> class is registered automatically. If the system needs a service, add it to <code>compose.yaml</code>.</p>
+    <ul>
+      <li>Use default settings. If you tune something, make it a separate entry whose name and docstring say what changed.</li>
+      <li><code>commit_one</code> must not return until the commit is durable by the system's own definition, and must raise if it failed. No client-side batching or retries beyond what the client library does by default.</li>
+      <li>State what the client is. For systems where the client does real work per commit, the client is part of the result.</li>
+    </ul>
+    <p>The results format is the contract: a driver written in any language can produce it for the same workload. The full interface is in the README under "Add a system". <a id="repo" hidden>Open the repository</a></p>
+  </section>
+</main>
+
+<footer id="sources"></footer>
+<script src="site.js"></script>
+</body>
+</html>

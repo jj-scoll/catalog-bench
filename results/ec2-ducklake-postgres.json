@@ -1,0 +1,766 @@
+{
+ "environment": "EC2 c6id.4xlarge, ca-central-1, local NVMe, Postgres 18 in Docker",
+ "ran_at": "2026-11-25T05:20:30+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "ducklake-postgres": "DuckDB 2.0.1, ducklake extension 08089b16dc, format 1.1"
+ },
+ "descriptions": {
+  "ducklake-postgres": "DuckLake, default settings: metadata in Postgres, Parquet data on local disk, one single-row INSERT per commit."
+ },
+ "harness_ceiling": [
+  {
+   "writers": 1,
+   "commits_per_s": 5428406.574814032
+  },
+  {
+   "writers": 1,
+   "commits_per_s": 5356826.4276172
+  },
+  {
+   "writers": 1,
+   "commits_per_s": 5628690.066131242
+  },
+  {
+   "writers": 2,
+   "commits_per_s": 10851750.869803706
+  },
+  {
+   "writers": 2,
+   "commits_per_s": 11054066.932154164
+  },
+  {
+   "writers": 2,
+   "commits_per_s": 10816113.19226726
+  },
+  {
+   "writers": 4,
+   "commits_per_s": 21755052.67214122
+  },
+  {
+   "writers": 4,
+   "commits_per_s": 21976231.438472748
+  },
+  {
+   "writers": 4,
+   "commits_per_s": 21614903.347594924
+  },
+  {
+   "writers": 8,
+   "commits_per_s": 43445744.89835608
+  },
+  {
+   "writers": 8,
+   "commits_per_s": 43539485.290248945
+  },
+  {
+   "writers": 8,
+   "commits_per_s": 44209145.038476974
+  },
+  {
+   "writers": 16,
+   "commits_per_s": 44498651.44975337
+  },
+  {
+   "writers": 16,
+   "commits_per_s": 44554622.364896655
+  },
+  {
+   "writers": 16,
+   "commits_per_s": 44569472.9172608
+  },
+  {
+   "writers": 32,
+   "commits_per_s": 44679334.91006254
+  },
+  {
+   "writers": 32,
+   "commits_per_s": 45077918.85006608
+  },
+  {
+   "writers": 32,
+   "commits_per_s": 45088912.65512674
+  }
+ ],
+ "results": [
+  {
+   "system": "ducklake-postgres",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.032082177999655,
+   "commits": 11337,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 188.8490218677563,
+   "per_writer_commits": [
+    11337
+   ],
+   "p50_ms": 5.214803999479045,
+   "p95_ms": 5.7554439999876195,
+   "p99_ms": 5.907635999392369,
+   "max_ms": 56.3807620001171,
+   "catalog_p50_ms": null,
+   "mean_ms": 5.291738157542434,
+   "rows_found": 11337,
+   "verified": true,
+   "ran_at": "2026-11-25T05:20:30+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.033598477999476,
+   "commits": 11356,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 189.1607414498339,
+   "per_writer_commits": [
+    11356
+   ],
+   "p50_ms": 5.20321000021795,
+   "p95_ms": 5.647341000440065,
+   "p99_ms": 5.784875000244938,
+   "max_ms": 52.571317999536404,
+   "catalog_p50_ms": null,
+   "mean_ms": 5.282914960814016,
+   "rows_found": 11356,
+   "verified": true,
+   "ran_at": "2026-11-25T05:21:37+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.02934543200081,
+   "commits": 11441,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 190.59011751110918,
+   "per_writer_commits": [
+    11441
+   ],
+   "p50_ms": 5.181341999559663,
+   "p95_ms": 5.651616000250215,
+   "p99_ms": 5.781500000011874,
+   "max_ms": 52.575654999600374,
+   "catalog_p50_ms": null,
+   "mean_ms": 5.243356740056374,
+   "rows_found": 11441,
+   "verified": true,
+   "ran_at": "2026-11-25T05:22:44+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 61.837381069,
+   "commits": 11334,
+   "errors": 6,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 6
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 6
+    }
+   },
+   "commits_per_s": 183.287193022505,
+   "per_writer_commits": [
+    1,
+    11333
+   ],
+   "p50_ms": 5.216904000008071,
+   "p95_ms": 5.716927999856125,
+   "p99_ms": 6.024078999871563,
+   "max_ms": 9502.94970699997,
+   "catalog_p50_ms": null,
+   "mean_ms": 6.131472701076653,
+   "rows_found": 11334,
+   "verified": true,
+   "ran_at": "2026-11-25T05:23:52+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 61.04524060899985,
+   "commits": 11213,
+   "errors": 6,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 6
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 6
+    }
+   },
+   "commits_per_s": 183.6834434287884,
+   "per_writer_commits": [
+    1,
+    11212
+   ],
+   "p50_ms": 5.2744550002898904,
+   "p95_ms": 5.728938000174821,
+   "p99_ms": 5.8942079995176755,
+   "max_ms": 5839.573911000116,
+   "catalog_p50_ms": null,
+   "mean_ms": 5.870642184522926,
+   "rows_found": 11213,
+   "verified": true,
+   "ran_at": "2026-11-25T05:25:03+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.15120637600012,
+   "commits": 11302,
+   "errors": 7,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 7
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 7
+    }
+   },
+   "commits_per_s": 187.89315594690075,
+   "per_writer_commits": [
+    1,
+    11301
+   ],
+   "p50_ms": 5.228688999523001,
+   "p95_ms": 5.7625259996711975,
+   "p99_ms": 5.943591000686865,
+   "max_ms": 465.8749019999959,
+   "catalog_p50_ms": null,
+   "mean_ms": 5.3492412961451645,
+   "rows_found": 11302,
+   "verified": true,
+   "ran_at": "2026-11-25T05:26:14+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 63.558577482000146,
+   "commits": 11346,
+   "errors": 19,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 19
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 19
+    }
+   },
+   "commits_per_s": 178.5124911458756,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    11343
+   ],
+   "p50_ms": 5.211551000684267,
+   "p95_ms": 5.725678000089829,
+   "p99_ms": 6.105380000008154,
+   "max_ms": 10362.488628000392,
+   "catalog_p50_ms": null,
+   "mean_ms": 7.177518628064713,
+   "rows_found": 11346,
+   "verified": true,
+   "ran_at": "2026-11-25T05:27:24+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.70653056900028,
+   "commits": 11312,
+   "errors": 18,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 18
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 18
+    }
+   },
+   "commits_per_s": 183.31933258427023,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    11309
+   ],
+   "p50_ms": 5.22208500024135,
+   "p95_ms": 5.717000000004191,
+   "p99_ms": 5.987225999888324,
+   "max_ms": 9627.822216999448,
+   "catalog_p50_ms": null,
+   "mean_ms": 7.497325254953508,
+   "rows_found": 11312,
+   "verified": true,
+   "ran_at": "2026-11-25T05:28:42+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 62.05880942699969,
+   "commits": 11311,
+   "errors": 18,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 18
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 18
+    }
+   },
+   "commits_per_s": 182.26260065954418,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    11308
+   ],
+   "p50_ms": 5.227663999903598,
+   "p95_ms": 5.696047000128601,
+   "p99_ms": 6.00183900041884,
+   "max_ms": 8489.72265500015,
+   "catalog_p50_ms": null,
+   "mean_ms": 7.3138742464837785,
+   "rows_found": 11311,
+   "verified": true,
+   "ran_at": "2026-11-25T05:29:57+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 61.652615609999884,
+   "commits": 11163,
+   "errors": 45,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 45
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 45
+    }
+   },
+   "commits_per_s": 181.06287769872642,
+   "per_writer_commits": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11157
+   ],
+   "p50_ms": 5.285627999910503,
+   "p95_ms": 5.800671999168117,
+   "p99_ms": 6.517531000099552,
+   "max_ms": 9683.24126599964,
+   "catalog_p50_ms": null,
+   "mean_ms": 8.536879728837736,
+   "rows_found": 11163,
+   "verified": true,
+   "ran_at": "2026-11-25T05:31:14+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.62781820700002,
+   "commits": 11192,
+   "errors": 46,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 46
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 46
+    }
+   },
+   "commits_per_s": 178.70652883049104,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11185
+   ],
+   "p50_ms": 5.259130000013101,
+   "p95_ms": 5.826215000524826,
+   "p99_ms": 6.561255999258719,
+   "max_ms": 9515.539866999461,
+   "catalog_p50_ms": null,
+   "mean_ms": 8.103324070760607,
+   "rows_found": 11192,
+   "verified": true,
+   "ran_at": "2026-11-25T05:32:39+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 62.62771541500024,
+   "commits": 11259,
+   "errors": 44,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 44
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 44
+    }
+   },
+   "commits_per_s": 179.77663603713873,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11252
+   ],
+   "p50_ms": 5.249608000667649,
+   "p95_ms": 5.775609000011173,
+   "p99_ms": 6.450453000070411,
+   "max_ms": 9839.34418499939,
+   "catalog_p50_ms": null,
+   "mean_ms": 9.151141445422564,
+   "rows_found": 11259,
+   "verified": true,
+   "ran_at": "2026-11-25T05:34:05+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 63.562649043999954,
+   "commits": 11304,
+   "errors": 94,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 94
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 94
+    }
+   },
+   "commits_per_s": 177.84029095727328,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11289
+   ],
+   "p50_ms": 5.207340000197291,
+   "p95_ms": 5.86154099983105,
+   "p99_ms": 6.684408000182884,
+   "max_ms": 10027.419480999924,
+   "catalog_p50_ms": null,
+   "mean_ms": 13.044326476918213,
+   "rows_found": 11304,
+   "verified": true,
+   "ran_at": "2026-11-25T05:35:32+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.96664627900009,
+   "commits": 11022,
+   "errors": 94,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 94
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 94
+    }
+   },
+   "commits_per_s": 175.04505403007195,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11007
+   ],
+   "p50_ms": 5.364834999454615,
+   "p95_ms": 5.9415800005808705,
+   "p99_ms": 6.753495000339171,
+   "max_ms": 10261.408155999561,
+   "catalog_p50_ms": null,
+   "mean_ms": 14.47177065958428,
+   "rows_found": 11022,
+   "verified": true,
+   "ran_at": "2026-11-25T05:37:03+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.57996822299992,
+   "commits": 11173,
+   "errors": 94,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 94
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 94
+    }
+   },
+   "commits_per_s": 178.5395601382489,
+   "per_writer_commits": [
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    11159
+   ],
+   "p50_ms": 5.292083999847819,
+   "p95_ms": 5.936264000411029,
+   "p99_ms": 6.801737999921897,
+   "max_ms": 9830.86105699931,
+   "catalog_p50_ms": null,
+   "mean_ms": 13.508663157350842,
+   "rows_found": 11173,
+   "verified": true,
+   "ran_at": "2026-11-25T05:38:33+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 63.392474561999734,
+   "commits": 11013,
+   "errors": 200,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 200
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 200
+    }
+   },
+   "commits_per_s": 173.7272456406313,
+   "per_writer_commits": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    10985
+   ],
+   "p50_ms": 5.37424399954034,
+   "p95_ms": 6.2326269999175565,
+   "p99_ms": 7.167374999880849,
+   "max_ms": 10161.977727000703,
+   "catalog_p50_ms": null,
+   "mean_ms": 21.293159620363042,
+   "rows_found": 11013,
+   "verified": true,
+   "ran_at": "2026-11-25T05:40:04+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 64.11021785699995,
+   "commits": 10796,
+   "errors": 194,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 194
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 194
+    }
+   },
+   "commits_per_s": 168.39749358020978,
+   "per_writer_commits": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    10765
+   ],
+   "p50_ms": 5.478079998283647,
+   "p95_ms": 6.425863999538706,
+   "p99_ms": 7.413849998556543,
+   "max_ms": 10464.055516000371,
+   "catalog_p50_ms": null,
+   "mean_ms": 23.474622498619816,
+   "rows_found": 10796,
+   "verified": true,
+   "ran_at": "2026-11-25T05:41:37+00:00"
+  },
+  {
+   "system": "ducklake-postgres",
+   "writers": 32,
+   "target_seconds": 60.0,
+   "seconds": 63.81372197000019,
+   "commits": 10834,
+   "errors": 196,
+   "error_samples": {
+    "TransactionException: TransactionContext Error: Failed to commit: Failed to commit DuckLake transaction.\nExceeded the maximum retry count of 10 set by the ducklake_max_retry_count setting.\nConsider increasing the value wit": 196
+   },
+   "error_types": {
+    "TransactionException": {
+     "count": 196
+    }
+   },
+   "commits_per_s": 169.7753972898373,
+   "per_writer_commits": [
+    0,
+    0,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    10806
+   ],
+   "p50_ms": 5.432762000054936,
+   "p95_ms": 6.394803998773568,
+   "p99_ms": 7.2491499995521735,
+   "max_ms": 10225.195393999456,
+   "catalog_p50_ms": null,
+   "mean_ms": 22.414881825186043,
+   "rows_found": 10834,
+   "verified": true,
+   "ran_at": "2026-11-25T05:43:11+00:00"
+  }
+ ]
+}

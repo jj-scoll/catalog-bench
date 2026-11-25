@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.data/
+site/data.json
+agent-reports/
+drivers/rust/target/
+drivers/rust/libduckdb/
+drivers/go/bench
+drivers/results/
+HANDOFF*.md
+.handoff-next-*.md
+site-preview-*.png

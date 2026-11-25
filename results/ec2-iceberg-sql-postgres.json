@@ -1,0 +1,584 @@
+{
+ "environment": "EC2 c6id.4xlarge, ca-central-1, local NVMe, Postgres 18 in Docker",
+ "ran_at": "2026-11-25T04:57:40+00:00",
+ "machine": {
+  "cpus": 16,
+  "platform": "Linux-6.18.62-127.179.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "python": "3.13.18"
+ },
+ "versions": {
+  "iceberg-sql-postgres": "pyiceberg 0.12.0, pyarrow 26.0.1, SQL catalog on PostgreSQL"
+ },
+ "descriptions": {
+  "iceberg-sql-postgres": "Iceberg via pyiceberg with the plain SQL catalog in Postgres, data on local disk. One single-row append per\ncommit, with pyiceberg's default retry-with-backoff when a commit loses the optimistic-concurrency race."
+ },
+ "harness_ceiling": [
+  {
+   "writers": 1,
+   "commits_per_s": 5446841.290704883
+  },
+  {
+   "writers": 1,
+   "commits_per_s": 5349983.354642764
+  },
+  {
+   "writers": 1,
+   "commits_per_s": 5517511.162082821
+  },
+  {
+   "writers": 2,
+   "commits_per_s": 11086460.324879369
+  },
+  {
+   "writers": 2,
+   "commits_per_s": 10897702.965655776
+  },
+  {
+   "writers": 2,
+   "commits_per_s": 11061769.750540253
+  },
+  {
+   "writers": 4,
+   "commits_per_s": 21691683.583140187
+  },
+  {
+   "writers": 4,
+   "commits_per_s": 21721732.353723574
+  },
+  {
+   "writers": 4,
+   "commits_per_s": 21840399.0949927
+  },
+  {
+   "writers": 8,
+   "commits_per_s": 43850676.774281956
+  },
+  {
+   "writers": 8,
+   "commits_per_s": 43282326.33878028
+  },
+  {
+   "writers": 8,
+   "commits_per_s": 42845072.37139312
+  },
+  {
+   "writers": 16,
+   "commits_per_s": 44610573.951959886
+  },
+  {
+   "writers": 16,
+   "commits_per_s": 44550915.65696459
+  },
+  {
+   "writers": 16,
+   "commits_per_s": 44509124.000096016
+  }
+ ],
+ "results": [
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.17517926399978,
+   "commits": 472,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 7.84376558197272,
+   "per_writer_commits": [
+    472
+   ],
+   "p50_ms": 127.66481099970406,
+   "p95_ms": 236.1968920004074,
+   "p99_ms": 255.9616009993988,
+   "max_ms": 260.5335060006837,
+   "catalog_p50_ms": 10.902963999797066,
+   "mean_ms": 127.4891538538017,
+   "rows_found": 472,
+   "verified": true,
+   "ran_at": "2026-11-25T04:57:40+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.06006535600045,
+   "commits": 472,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 7.858799307031451,
+   "per_writer_commits": [
+    472
+   ],
+   "p50_ms": 127.90232699990156,
+   "p95_ms": 235.72155099918746,
+   "p99_ms": 257.7482550004788,
+   "max_ms": 263.2165319992055,
+   "catalog_p50_ms": 11.3963750000039,
+   "mean_ms": 127.24525975422155,
+   "rows_found": 472,
+   "verified": true,
+   "ran_at": "2026-11-25T04:58:48+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 1,
+   "target_seconds": 60.0,
+   "seconds": 60.097645988000295,
+   "commits": 472,
+   "errors": 0,
+   "error_samples": {},
+   "error_types": {},
+   "commits_per_s": 7.853884994002,
+   "per_writer_commits": [
+    472
+   ],
+   "p50_ms": 128.1258950002666,
+   "p95_ms": 234.37642299995787,
+   "p99_ms": 253.9397150003424,
+   "max_ms": 263.85406800000055,
+   "catalog_p50_ms": 10.898156999246567,
+   "mean_ms": 127.32491354873959,
+   "rows_found": 472,
+   "verified": true,
+   "ran_at": "2026-11-25T04:59:55+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.54694329300037,
+   "commits": 474,
+   "errors": 9,
+   "error_samples": {
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 5
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 9
+    }
+   },
+   "commits_per_s": 7.828636331089526,
+   "per_writer_commits": [
+    194,
+    280
+   ],
+   "p50_ms": 142.01429700005974,
+   "p95_ms": 803.0480080005873,
+   "p99_ms": 1928.6021950001668,
+   "max_ms": 2406.5157910008566,
+   "catalog_p50_ms": 11.227764000068419,
+   "mean_ms": 213.60791841347935,
+   "rows_found": 474,
+   "verified": true,
+   "ran_at": "2026-11-25T05:01:03+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.51547050299996,
+   "commits": 480,
+   "errors": 11,
+   "error_samples": {
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 5
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 11
+    }
+   },
+   "commits_per_s": 7.931856036320576,
+   "per_writer_commits": [
+    173,
+    307
+   ],
+   "p50_ms": 141.4702780002699,
+   "p95_ms": 814.1598819993305,
+   "p99_ms": 1383.7589549993936,
+   "max_ms": 2292.1181880001313,
+   "catalog_p50_ms": 11.073808000219287,
+   "mean_ms": 204.13925021044292,
+   "rows_found": 480,
+   "verified": true,
+   "ran_at": "2026-11-25T05:02:13+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 2,
+   "target_seconds": 60.0,
+   "seconds": 60.56243482900027,
+   "commits": 475,
+   "errors": 14,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 1,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 4
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 14
+    }
+   },
+   "commits_per_s": 7.843145694871348,
+   "per_writer_commits": [
+    174,
+    301
+   ],
+   "p50_ms": 140.3095570003643,
+   "p95_ms": 487.42976799985627,
+   "p99_ms": 1450.958577000165,
+   "max_ms": 2024.046821000411,
+   "catalog_p50_ms": 10.956152999824553,
+   "mean_ms": 189.19810895789277,
+   "rows_found": 475,
+   "verified": true,
+   "ran_at": "2026-11-25T05:03:24+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 60.39668261500083,
+   "commits": 481,
+   "errors": 36,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 2,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 6
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 36
+    }
+   },
+   "commits_per_s": 7.96401357117805,
+   "per_writer_commits": [
+    86,
+    105,
+    145,
+    145
+   ],
+   "p50_ms": 172.76056599985168,
+   "p95_ms": 1329.7964330004106,
+   "p99_ms": 2202.3695880006926,
+   "max_ms": 2478.646192999804,
+   "catalog_p50_ms": 11.380244000065431,
+   "mean_ms": 344.55981541998307,
+   "rows_found": 481,
+   "verified": true,
+   "ran_at": "2026-11-25T05:04:35+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.41268608500013,
+   "commits": 483,
+   "errors": 34,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 3,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 4
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 34
+    }
+   },
+   "commits_per_s": 7.864824530415245,
+   "per_writer_commits": [
+    83,
+    88,
+    103,
+    209
+   ],
+   "p50_ms": 171.58166599983815,
+   "p95_ms": 1397.7484320002986,
+   "p99_ms": 2287.8716100003658,
+   "max_ms": 2503.1055649997143,
+   "catalog_p50_ms": 11.422334000599221,
+   "mean_ms": 353.43426992545676,
+   "rows_found": 483,
+   "verified": true,
+   "ran_at": "2026-11-25T05:05:49+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 4,
+   "target_seconds": 60.0,
+   "seconds": 61.96852622700044,
+   "commits": 483,
+   "errors": 37,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 4,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 5
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 37
+    }
+   },
+   "commits_per_s": 7.794279280270361,
+   "per_writer_commits": [
+    76,
+    94,
+    135,
+    178
+   ],
+   "p50_ms": 164.0566010000839,
+   "p95_ms": 1415.5884239999068,
+   "p99_ms": 2411.306472999968,
+   "max_ms": 2505.3013229999124,
+   "catalog_p50_ms": 11.647084999822255,
+   "mean_ms": 344.0713223064099,
+   "rows_found": 483,
+   "verified": true,
+   "ran_at": "2026-11-25T05:07:05+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 61.53133450399946,
+   "commits": 490,
+   "errors": 103,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 8,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 8
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 103
+    }
+   },
+   "commits_per_s": 7.9634222782564645,
+   "per_writer_commits": [
+    48,
+    48,
+    52,
+    60,
+    62,
+    65,
+    70,
+    85
+   ],
+   "p50_ms": 248.79014199996163,
+   "p95_ms": 1916.7686740001955,
+   "p99_ms": 2468.7289889998283,
+   "max_ms": 2633.2375679994584,
+   "catalog_p50_ms": 11.792252999839548,
+   "mean_ms": 527.9187779346956,
+   "rows_found": 490,
+   "verified": true,
+   "ran_at": "2026-11-25T05:08:22+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 61.5479926930002,
+   "commits": 494,
+   "errors": 103,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 15,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 8
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 103
+    }
+   },
+   "commits_per_s": 8.026256883210786,
+   "per_writer_commits": [
+    42,
+    42,
+    43,
+    61,
+    69,
+    71,
+    75,
+    91
+   ],
+   "p50_ms": 284.51656899960653,
+   "p95_ms": 1560.9970619998421,
+   "p99_ms": 2434.69472400011,
+   "max_ms": 2590.4455440004313,
+   "catalog_p50_ms": 11.57530099953874,
+   "mean_ms": 527.3000070708395,
+   "rows_found": 494,
+   "verified": true,
+   "ran_at": "2026-11-25T05:09:47+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 8,
+   "target_seconds": 60.0,
+   "seconds": 61.611649307000334,
+   "commits": 489,
+   "errors": 104,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 13,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 11
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 104
+    }
+   },
+   "commits_per_s": 7.936810741153779,
+   "per_writer_commits": [
+    41,
+    49,
+    52,
+    58,
+    68,
+    70,
+    75,
+    76
+   ],
+   "p50_ms": 236.65701699974306,
+   "p95_ms": 2046.4985359994898,
+   "p99_ms": 2479.5577519998915,
+   "max_ms": 2600.2285650001795,
+   "catalog_p50_ms": 11.516679999658663,
+   "mean_ms": 525.990824719839,
+   "rows_found": 489,
+   "verified": true,
+   "ran_at": "2026-11-25T05:11:12+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 61.97698603900062,
+   "commits": 488,
+   "errors": 276,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 22,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 17
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 276
+    }
+   },
+   "commits_per_s": 7.873890474327251,
+   "per_writer_commits": [
+    15,
+    18,
+    19,
+    20,
+    23,
+    23,
+    24,
+    26,
+    28,
+    28,
+    34,
+    36,
+    38,
+    42,
+    46,
+    68
+   ],
+   "p50_ms": 489.95880399979796,
+   "p95_ms": 2405.0015309994706,
+   "p99_ms": 2603.046162999817,
+   "max_ms": 2752.4450620003336,
+   "catalog_p50_ms": 12.150786999882257,
+   "mean_ms": 701.5960028627284,
+   "rows_found": 488,
+   "verified": true,
+   "ran_at": "2026-11-25T05:12:38+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.507907765999335,
+   "commits": 490,
+   "errors": 268,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 22,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 18
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 268
+    }
+   },
+   "commits_per_s": 7.839008175322923,
+   "per_writer_commits": [
+    13,
+    13,
+    18,
+    23,
+    24,
+    28,
+    28,
+    28,
+    29,
+    30,
+    33,
+    35,
+    37,
+    45,
+    45,
+    61
+   ],
+   "p50_ms": 490.2519610004674,
+   "p95_ms": 2385.6636979999166,
+   "p99_ms": 2656.2871209998775,
+   "max_ms": 2828.892996999457,
+   "catalog_p50_ms": 12.350416999652225,
+   "mean_ms": 743.9033981367676,
+   "rows_found": 490,
+   "verified": true,
+   "ran_at": "2026-11-25T05:14:07+00:00"
+  },
+  {
+   "system": "iceberg-sql-postgres",
+   "writers": 16,
+   "target_seconds": 60.0,
+   "seconds": 62.09599927999989,
+   "commits": 493,
+   "errors": 269,
+   "error_samples": {
+    "CommitFailedException: Table has been updated by another process: bench.commits": 24,
+    "CommitFailedException: Requirement failed: branch main has changed: expected id <id>, found <id>": 13
+   },
+   "error_types": {
+    "CommitFailedException": {
+     "count": 269
+    }
+   },
+   "commits_per_s": 7.939319855003723,
+   "per_writer_commits": [
+    13,
+    17,
+    20,
+    22,
+    24,
+    25,
+    29,
+    29,
+    29,
+    33,
+    33,
+    35,
+    42,
+    44,
+    47,
+    51
+   ],
+   "p50_ms": 481.00849599995854,
+   "p95_ms": 2316.5667339999345,
+   "p99_ms": 2723.8073389999045,
+   "max_ms": 2835.252206000405,
+   "catalog_p50_ms": 11.889440000231843,
+   "mean_ms": 726.2168913651241,
+   "rows_found": 493,
+   "verified": true,
+   "ran_at": "2026-11-25T05:15:36+00:00"
+  }
+ ]
+}
